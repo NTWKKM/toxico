@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -98,7 +98,9 @@
     }
 
     header {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 3rem;
       position: sticky;
       top: 1rem;
@@ -113,19 +115,33 @@
       animation: fadeUp 0.6s ease forwards;
     }
 
+    .theme-toggle {
+      position: absolute;
+      right: 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
+    
+    .theme-toggle:hover {
+      background: var(--bg-surface);
+    }
+
     h1 {
       font-size: 2.5rem;
       font-weight: 700;
       background: linear-gradient(90deg, var(--primary), var(--accent));
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 0.5rem;
+      margin: 0;
       letter-spacing: -0.025em;
-    }
-
-    .subtitle {
-      font-size: 1.125rem;
-      color: var(--text-muted);
     }
 
     .section {
@@ -245,11 +261,14 @@
   <div class="container">
     <header>
       <h1>Toxico Course Bookmarks</h1>
-      <div class="subtitle">All your key toxicology resources and references at a glance.</div>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
     </header>
 
     <div class="section">
-      <h2>Resources & Videos</h2>
 
       <h3>📌 Introduction & General Management</h3>
       <div class="links-grid">
@@ -570,5 +589,24 @@
       </div>
     </div>
   </div>
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const htmlElem = document.documentElement;
+
+    const sunIcon = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+    const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = htmlElem.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        htmlElem.setAttribute('data-theme', 'dark');
+        themeIcon.innerHTML = sunIcon;
+      } else {
+        htmlElem.setAttribute('data-theme', 'light');
+        themeIcon.innerHTML = moonIcon;
+      }
+    });
+  </script>
 </body>
 </html>
