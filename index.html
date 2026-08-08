@@ -326,6 +326,67 @@
       vertical-align: middle;
     }
 
+    /* Visited Links Styling & Tag */
+    a.link-card.visited {
+      opacity: 0.8;
+      border-color: var(--border);
+    }
+
+    a.link-card.visited::before {
+      background-color: var(--text-muted);
+    }
+
+    .tag-visited {
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background-color: color-mix(in srgb, var(--border), transparent 30%);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      vertical-align: middle;
+    }
+
+    .header-actions {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .reset-history-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.4rem 0.6rem;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      font-family: inherit;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .reset-history-btn:hover {
+      background: var(--bg-surface);
+      color: var(--accent);
+    }
+
+    .reset-history-btn svg {
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+
     @media (max-width: 640px) {
       .container {
         padding: 1rem;
@@ -339,6 +400,9 @@
       }
       .links-grid {
         grid-template-columns: 1fr;
+      }
+      .reset-history-btn span {
+        display: none;
       }
     }
   </style>
@@ -355,11 +419,20 @@
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
         <input type="text" id="search-input" placeholder="Search bookmarks...">
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-          <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
+        <div class="header-actions">
+          <button class="reset-history-btn" id="reset-history-btn" title="Reset Visited Links History">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Reset History</span>
+          </button>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+            <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -752,6 +825,53 @@
         section.style.display = hasVisibleGrid ? '' : 'none';
       });
     });
+
+    // Visited links history & tracking
+    let visitedUrls = JSON.parse(localStorage.getItem('toxico_visited') || '[]');
+    const linkCards = document.querySelectorAll('a.link-card');
+    const resetHistoryBtn = document.getElementById('reset-history-btn');
+
+    function markCardVisited(card) {
+      if (!card.classList.contains('visited')) {
+        card.classList.add('visited');
+        if (!card.querySelector('.tag-visited')) {
+          const tag = document.createElement('span');
+          tag.className = 'tag-visited';
+          tag.textContent = 'Visited';
+          card.appendChild(tag);
+        }
+      }
+    }
+
+    // Initialize visited states on load & track clicks
+    linkCards.forEach(card => {
+      if (visitedUrls.includes(card.href)) {
+        markCardVisited(card);
+      }
+
+      card.addEventListener('click', () => {
+        if (!visitedUrls.includes(card.href)) {
+          visitedUrls.push(card.href);
+          localStorage.setItem('toxico_visited', JSON.stringify(visitedUrls));
+        }
+        markCardVisited(card);
+      });
+    });
+
+    // Reset history button listener
+    if (resetHistoryBtn) {
+      resetHistoryBtn.addEventListener('click', () => {
+        localStorage.removeItem('toxico_visited');
+        visitedUrls = [];
+        linkCards.forEach(card => {
+          card.classList.remove('visited');
+          const tag = card.querySelector('.tag-visited');
+          if (tag) {
+            tag.remove();
+          }
+        });
+      });
+    }
   </script>
 </body>
 </html>
