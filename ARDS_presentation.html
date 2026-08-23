@@ -448,12 +448,12 @@ table.crit tr:hover td { background: rgba(63,199,184,.04); }
 .calc-cell.hi { border-color: var(--o2); background: var(--o2-dim); }
 .calc-cell.hi .num { color: var(--o2); }
 
-/* Slide Index Modal */
-#indexModal {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+/* Slide Index & Help Modals */
+#indexModal, #helpModal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
   z-index: 100; display: none; align-items: center; justify-content: center; padding: 24px;
 }
-#indexModal.open { display: flex; }
+#indexModal.open, #helpModal.open { display: flex; }
 .modal-box {
   background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
   max-width: 840px; width: 100%; max-height: 85vh; display: flex; flex-direction: column;
@@ -601,7 +601,7 @@ table.crit tr:hover td { background: rgba(63,199,184,.04); }
 
 @media print {
   body { overflow: visible !important; background: #fff !important; color: #000 !important; }
-  .topbar, .hud, .progress-container, #indexModal, #lightboxModal { display: none !important; }
+  .topbar, .hud, .progress-container, #indexModal, #helpModal, #lightboxModal { display: none !important; }
   #deck { overflow: visible !important; height: auto !important; }
   .slide { position: relative !important; opacity: 1 !important; visibility: visible !important; transform: none !important; page-break-after: always; height: 100vh; padding: 30px !important; }
   .card { border: 1px solid #ccc !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
@@ -928,7 +928,25 @@ function toggleHelpModal(){
   if(m){
     m.classList.toggle('open');
     const isThai = currentLang === 'th';
-    document.getElementById('helpModalTitle').innerHTML = isThai ? '⌨️ คีย์ลัดสำหรับการนำเสนอ (Keyboard Shortcuts)' : '⌨️ Master Presentation Keyboard Shortcuts';
+    const titleEl = document.getElementById('helpModalTitle');
+    if(titleEl) {
+      titleEl.innerHTML = isThai ? '⌨️ คีย์ลัดสำหรับการนำเสนอ (Keyboard Shortcuts)' : '⌨️ Master Presentation Keyboard Shortcuts';
+    }
+    const body = m.querySelector('.modal-body');
+    if(body){
+      body.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12.5px;">
+          <div class="card" style="padding:10px;"><b style="color:var(--o2);">&rarr; / Space / J / N</b><br><span style="color:var(--muted); font-size:11px;">${isThai ? 'สไลด์ถัดไป (Next Slide)' : 'Next Slide'}</span></div>
+          <div class="card" style="padding:10px;"><b style="color:var(--o2);">&larr; / Backspace / K / P</b><br><span style="color:var(--muted); font-size:11px;">${isThai ? 'สไลด์ก่อนหน้า (Prev Slide)' : 'Previous Slide'}</span></div>
+          <div class="card" style="padding:10px;"><b style="color:var(--o2);">L</b><br><span style="color:var(--muted); font-size:11px;">${isThai ? 'สลับภาษา (TH 🇹🇭 / EN 🇬🇧)' : 'Toggle Language'}</span></div>
+          <div class="card" style="padding:10px;"><b style="color:var(--o2);">T</b><br><span style="color:var(--muted); font-size:11px;">${isThai ? 'สลับธีมสี (Dark 🌙 / Light ☀️)' : 'Toggle Theme'}</span></div>
+          <div class="card" style="padding:10px;"><b style="color:var(--o2);">I / M</b><br><span style="color:var(--muted); font-size:11px;">${isThai ? 'เปิดสารบัญสไลด์ (Index)' : 'Slide Index Drawer'}</span></div>
+          <div class="card" style="padding:10px;"><b style="color:var(--o2);">F</b><br><span style="color:var(--muted); font-size:11px;">${isThai ? 'โหมดเต็มจอ (Fullscreen)' : 'Toggle Fullscreen'}</span></div>
+          <div class="card" style="padding:10px;"><b style="color:var(--o2);">Home / End</b><br><span style="color:var(--muted); font-size:11px;">${isThai ? 'สไลด์แรก / สไลด์สุดท้าย' : 'First / Last Slide'}</span></div>
+          <div class="card" style="padding:10px;"><b style="color:var(--o2);">? / H / Esc</b><br><span style="color:var(--muted); font-size:11px;">${isThai ? 'วิธีใช้ / ปิดหน้าต่าง Modal' : 'Help / Close Modal'}</span></div>
+        </div>
+      `;
+    }
   }
 }
 
@@ -1119,10 +1137,11 @@ document.addEventListener('keydown', (e)=>{
     toggleIndexModal();
   } else if(e.key==='?' || e.key==='h' || e.key==='H'){
     toggleHelpModal();
-    toggleIndexModal();
   } else if(e.key==='Escape'){
-    const m = document.getElementById('indexModal');
-    if(m && m.classList.contains('open')) toggleIndexModal();
+    const idx = document.getElementById('indexModal');
+    if(idx && idx.classList.contains('open')) toggleIndexModal();
+    const hlp = document.getElementById('helpModal');
+    if(hlp && hlp.classList.contains('open')) toggleHelpModal();
     closeLightbox();
   }
 });
