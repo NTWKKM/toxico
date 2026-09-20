@@ -8,3 +8,4 @@
 ## 2. Architectural Decision Records (ADR)
 - **ADR-001: Minimalist Layout Preservation**: Retain the original clean, uncluttered bookmark grid layout without excessive UI components for optimal reading comfort.
 - **ADR-002: Webex Link Removal**: Removed legacy Cisco Webex meeting room link (`mahidol.webex.com/...`) per user request.
+- **ADR-003: Snakebite Clinical Guidelines Addition**: Embedded local Ramathibodi Poison Center guidelines (Neurotoxic snakebites, Antivenom administration, Allergic reactions to antivenom) with document icons and PDF badges.

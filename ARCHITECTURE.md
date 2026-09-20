@@ -6,7 +6,7 @@
 - **Resource Link Cards**: Clean minimal link cards with subtle hover elevation, SVG icons, and dynamic `VISITED` status tags.
 
 ## 2. Data Flow
-- **Static Content Baseline**: HTML markup containing YouTube lecture links and PubMed/emDocs research paper references.
+- **Static Content Baseline**: HTML markup containing YouTube lecture links, PubMed/emDocs research paper references, and clinical guidelines / PDF documents (Ramathibodi Poison Center protocols).
 - **Visited Links Tracking (LocalStorage)**:
   - List of clicked link URLs stored in `localStorage.toxico_visited`.
   - Automatically highlights visited link cards and appends `<span class="tag-visited">Visited</span>`.
@@ -20,3 +20,4 @@
 - **Minimalist Single-Page Architecture**: Kept intentionally clean and lightweight.
 - **Visited Link History Persistence**: Built-in simple click tracking via `localStorage` without external tracking servers.
 - **Webex Link Removal**: Removed legacy Cisco Webex meeting room link (`mahidol.webex.com/...`).
+- **Clinical Guidelines Integration**: Added Ramathibodi Poison Center Neurotoxic Snakebite, Antivenom Administration, and Allergic Reactions to Antivenom PDFs directly under the Bites & Stings section.
