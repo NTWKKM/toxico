@@ -128,6 +128,12 @@
       height: 8px;
       background-color: var(--accent);
       display: inline-block;
+      cursor: pointer;
+      transition: transform 0.2s var(--spring), opacity 0.2s var(--spring);
+    }
+
+    .brand-mark:hover {
+      transform: scale(1.25);
     }
 
     .brand-title {
@@ -136,6 +142,13 @@
       font-weight: 600;
       letter-spacing: -0.02em;
       color: var(--ink-primary);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s var(--spring), opacity 0.2s var(--spring);
+    }
+
+    .brand-title:hover {
+      color: var(--accent);
     }
 
     .brand-Serial {
@@ -703,8 +716,8 @@
   <div class="dock-wrapper">
     <header class="command-dock">
       <div class="dock-brand">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-title">Toxico Index</span>
+        <span class="brand-mark" id="brand-mark-top" role="button" tabindex="0" title="Scroll to top" aria-label="Scroll to top"></span>
+        <span class="brand-title" id="brand-title-top" role="button" tabindex="0" title="Scroll to top">Toxico Index</span>
         <span class="brand-Serial" id="dock-section-label">Section 01 · Video</span>
       </div>
 
@@ -1414,6 +1427,24 @@
     }
 
     searchInput.addEventListener('input', applyFilters);
+
+    // Clickable Brand Mark & Brand Title -> Smooth Scroll to Top
+    const scrollTopTriggers = [
+      document.getElementById('brand-mark-top'),
+      document.getElementById('brand-title-top')
+    ];
+    scrollTopTriggers.forEach(el => {
+      if (!el) return;
+      el.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
 
     // Clickable Keystone Nodes -> Smooth Scroll to Section
     spineNodes.forEach(node => {
