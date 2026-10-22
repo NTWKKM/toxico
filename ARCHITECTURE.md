@@ -16,8 +16,15 @@
   - Hides empty subheadings (`h2`/`h3`) and section containers dynamically when search query has no matching cards.
 - **Theme Persistence**: Dark/Light mode theme state toggled via `data-theme` attribute on `<html>`.
 
-## 3. Key Decisions
+## 3. Repository Structure
+- `/index.html`: Single-page application markup, CSS design tokens, and interactive filtering/scroll logic.
+- `/server.js`: Express static server listening on `0.0.0.0:3000`.
+- `/ARCHITECTURE.md`, `/CONTEXT.md`, `/DESIGN.md`: Root-level architecture, domain context, and UI design specifications for agent inspection.
+- `/pdfs/`: Clinical toxicology PDF guidelines (`Neurotoxic snakebites.pdf`, `วิธีให้ Antivenom neurototoxin Snake.docx.pdf`, `Allergic reaction to antivenom_Ver 2.pdf`).
+- `/docs/`: Course documents & interactive HTML presentations (`ARDS_presentation.html`).
+
+## 4. Key Decisions
 - **Minimalist Single-Page Architecture**: Kept intentionally clean and lightweight.
 - **Visited Link History Persistence**: Built-in simple click tracking via `localStorage` without external tracking servers.
 - **Webex Link Removal**: Removed legacy Cisco Webex meeting room link (`mahidol.webex.com/...`).
-- **Clinical Guidelines Integration**: Added Ramathibodi Poison Center Neurotoxic Snakebite, Antivenom Administration, and Allergic Reactions to Antivenom PDFs directly under the Bites & Stings section.
+- **Clinical Guidelines Integration**: Added Ramathibodi Poison Center Neurotoxic Snakebite, Antivenom Administration, and Allergic Reactions to Antivenom PDFs under `/pdfs/`.

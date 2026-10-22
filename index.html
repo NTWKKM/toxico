@@ -16,34 +16,46 @@
       --font-sans: 'Plus Jakarta Sans', 'IBM Plex Sans Thai', -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
 
-      /* Minimalist Alabaster & Carbon Ink Palette */
-      --bg-canvas: #FAF9F6;
+      /* Taste-Skill High-Contrast Alabaster & Carbon Ink Palette (WCAG AA/AAA) */
+      --bg-canvas: #F3F1EC;
+      --bg-menu: rgba(255, 255, 255, 0.94);
       --bg-elevated: #FFFFFF;
-      --bg-subtle: #F1EFEA;
-      --bg-hover: #F3F1EC;
-      --ink-primary: #141413;
-      --ink-secondary: #575653;
-      --ink-muted: #8C8A84;
-      --line: rgba(20, 20, 19, 0.08);
-      --line-strong: rgba(20, 20, 19, 0.2);
+      --bg-subtle: #E6E3DC;
+      --bg-hover: #FFFFFF;
+      --bg-visited: #EAE7E0;
+      --ink-primary: #121211;
+      --ink-secondary: #43423F;
+      --ink-muted: #65635E;
+      --line: #D5D1C8;
+      --line-strong: #ACA79C;
+      --line-hover: #121211;
 
-      /* Single Controlled Clinical Accent */
+      /* Controlled Clinical Accent */
       --accent: #C83E2B;
+      --accent-soft: rgba(200, 62, 43, 0.14);
+      --shadow-card: 0 1px 2px rgba(18, 18, 17, 0.05);
+      --shadow-card-hover: 0 4px 12px rgba(18, 18, 17, 0.08);
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     [data-theme="dark"] {
-      --bg-canvas: #0C0C0B;
-      --bg-elevated: #141413;
-      --bg-subtle: #1C1C1A;
-      --bg-hover: #1A1A18;
-      --ink-primary: #F2F0EA;
-      --ink-secondary: #A3A19A;
-      --ink-muted: #686660;
-      --line: rgba(242, 240, 234, 0.08);
-      --line-strong: rgba(242, 240, 234, 0.22);
+      --bg-canvas: #0B0B0A;
+      --bg-menu: rgba(20, 20, 19, 0.94);
+      --bg-elevated: #171715;
+      --bg-subtle: #232320;
+      --bg-hover: #1F1F1C;
+      --bg-visited: #121210;
+      --ink-primary: #F5F3EE;
+      --ink-secondary: #C2BFB8;
+      --ink-muted: #8E8B84;
+      --line: #2E2E2A;
+      --line-strong: #4A4943;
+      --line-hover: #F5F3EE;
 
-      --accent: #E05A47;
+      --accent: #E85D4A;
+      --accent-soft: rgba(232, 93, 74, 0.2);
+      --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
+      --shadow-card-hover: 0 6px 16px rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -67,30 +79,31 @@
       transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
     }
 
-    /* Sticky Minimal Top Bar */
+    /* Sticky High-Contrast Top Bar */
     .top-bar {
       position: sticky;
       top: 0;
       z-index: 50;
-      background: color-mix(in srgb, var(--bg-canvas) 90%, transparent);
+      background: var(--bg-menu);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
     }
 
     .top-bar-inner {
       max-width: 1160px;
       margin: 0 auto;
-      padding: 0.85rem clamp(1.25rem, 3vw, 2.5rem);
+      padding: 0.75rem clamp(1.25rem, 3vw, 2.5rem);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1.5rem;
+      gap: 2rem;
     }
 
     .brand-wordmark {
       font-family: var(--font-display);
-      font-size: 0.98rem;
+      font-size: 1.02rem;
       font-weight: 600;
       letter-spacing: -0.02em;
       color: var(--ink-primary);
@@ -105,12 +118,17 @@
       color: var(--accent);
     }
 
+    /* Segmented Menu Rail with Distinct Active Contrast */
     .top-nav {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
-      font-size: 0.84rem;
-      font-weight: 500;
+      gap: 0.25rem;
+      padding: 0.22rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
     }
 
     .top-nav a {
@@ -118,18 +136,20 @@
       text-decoration: none;
       white-space: nowrap;
       flex-shrink: 0;
-      padding: 0.2rem 0;
-      border-bottom: 1.5px solid transparent;
-      transition: color 0.15s var(--ease), border-color 0.15s var(--ease);
+      padding: 0.34rem 0.8rem;
+      border-radius: 6px;
+      transition: color 0.15s var(--ease), background-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
     }
 
-    .top-nav a:hover,
-    .top-nav a.is-active {
+    .top-nav a:hover {
       color: var(--ink-primary);
+      background: color-mix(in srgb, var(--bg-elevated) 60%, transparent);
     }
 
     .top-nav a.is-active {
-      border-bottom-color: var(--accent);
+      color: var(--bg-elevated);
+      background: var(--ink-primary);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14);
     }
 
     .top-actions {
@@ -146,69 +166,84 @@
 
     .search-box svg {
       position: absolute;
-      left: 0.65rem;
+      left: 0.7rem;
       top: 50%;
       transform: translateY(-50%);
-      width: 0.85rem;
-      height: 0.85rem;
-      color: var(--ink-muted);
+      width: 0.88rem;
+      height: 0.88rem;
+      color: var(--ink-secondary);
       pointer-events: none;
     }
 
     .search-box input {
       width: 100%;
-      padding: 0.38rem 1.75rem 0.38rem 1.95rem;
+      padding: 0.42rem 2rem 0.42rem 2.05rem;
       border-radius: 6px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--line-strong);
       background: var(--bg-elevated);
       color: var(--ink-primary);
       font-size: 0.8125rem;
+      font-weight: 500;
       font-family: inherit;
-      transition: border-color 0.15s var(--ease);
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
     }
 
     .search-box input::placeholder {
       color: var(--ink-muted);
+      font-weight: 400;
     }
 
     .search-box input:focus {
       outline: none;
       border-color: var(--ink-primary);
+      box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
     .search-kbd {
       position: absolute;
-      right: 0.5rem;
+      right: 0.45rem;
       top: 50%;
       transform: translateY(-50%);
       font-family: var(--font-mono);
-      font-size: 0.65rem;
-      color: var(--ink-muted);
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      background: var(--bg-subtle);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0.05rem 0.35rem;
       pointer-events: none;
     }
 
+    /* High-Contrast Tactile Action Buttons */
     .btn-ghost {
-      background: transparent;
-      border: 1px solid var(--line);
-      color: var(--ink-secondary);
+      background: var(--bg-elevated);
+      border: 1px solid var(--line-strong);
+      color: var(--ink-primary);
       cursor: pointer;
-      padding: 0.38rem 0.65rem;
+      padding: 0.42rem 0.75rem;
       border-radius: 6px;
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.38rem;
       font-size: 0.78rem;
       font-family: inherit;
-      font-weight: 500;
+      font-weight: 600;
       white-space: nowrap;
       flex-shrink: 0;
-      transition: color 0.15s var(--ease), border-color 0.15s var(--ease), background-color 0.15s var(--ease);
+      box-shadow: var(--shadow-card);
+      transition: color 0.15s var(--ease), border-color 0.15s var(--ease), background-color 0.15s var(--ease), transform 0.1s var(--ease);
     }
 
     .btn-ghost:hover {
-      color: var(--ink-primary);
-      border-color: var(--line-strong);
-      background: var(--bg-subtle);
+      color: var(--bg-elevated);
+      border-color: var(--ink-primary);
+      background: var(--ink-primary);
+    }
+
+    .btn-ghost:active {
+      transform: translateY(1px);
     }
 
     .btn-ghost:focus-visible,
@@ -219,8 +254,8 @@
     }
 
     .btn-ghost svg {
-      width: 0.85rem;
-      height: 0.85rem;
+      width: 0.88rem;
+      height: 0.88rem;
     }
 
     /* Main Container with Continuous Background Vertical Line */
@@ -288,11 +323,11 @@
 
     .spine-kicker {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--ink-muted);
+      color: var(--ink-secondary);
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
@@ -306,13 +341,14 @@
       font-weight: 600;
       letter-spacing: -0.02em;
       line-height: 1.25;
-      color: var(--ink-muted);
+      color: var(--ink-secondary);
       transition: color 0.25s var(--ease);
     }
 
     .section-meta {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.74rem;
+      font-weight: 500;
       color: var(--ink-muted);
       font-variant-numeric: tabular-nums;
     }
@@ -345,7 +381,7 @@
       position: relative;
       z-index: 2;
       font-family: var(--font-sans);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-weight: 600;
       letter-spacing: -0.01em;
       color: var(--ink-secondary);
@@ -369,7 +405,7 @@
 
     .topic-index {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: var(--ink-muted);
       font-variant-numeric: tabular-nums;
@@ -381,13 +417,13 @@
       color: var(--accent);
     }
 
-    /* 3-Column Minimal Card Grid Overlapping the Background Spine Line */
+    /* 3-Column High-Contrast Card Grid Overlapping the Background Spine Line */
     .links-grid {
       position: relative;
       z-index: 2;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.65rem;
+      gap: 0.7rem;
     }
 
     a.link-card {
@@ -397,39 +433,41 @@
       align-items: center;
       justify-content: space-between;
       gap: 0.75rem;
-      padding: 0.75rem 0.95rem;
+      padding: 0.8rem 1rem;
       background-color: var(--bg-elevated);
       border: 1px solid var(--line);
       border-radius: 8px;
+      box-shadow: var(--shadow-card);
       color: var(--ink-primary);
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       font-weight: 500;
-      line-height: 1.4;
-      transition: background-color 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.15s var(--ease), color 0.15s var(--ease);
+      line-height: 1.42;
+      transition: background-color 0.15s var(--ease), border-color 0.15s var(--ease), box-shadow 0.15s var(--ease), transform 0.15s var(--ease), color 0.15s var(--ease);
     }
 
     a.link-card:hover {
       background-color: var(--bg-hover);
-      border-color: var(--line-strong);
+      border-color: var(--line-hover);
+      box-shadow: var(--shadow-card-hover);
       transform: translateY(-1px);
     }
 
     .card-left {
       display: flex;
       align-items: baseline;
-      gap: 0.55rem;
+      gap: 0.6rem;
       min-width: 0;
       flex: 1;
     }
 
-    /* Quiet Monochrome Affordance Icons */
+    /* Crisp Monochrome Affordance Icons */
     a.link-card svg.yt-icon,
     a.link-card svg.type-icon {
-      width: 0.9rem;
-      height: 0.9rem;
+      width: 0.92rem;
+      height: 0.92rem;
       flex-shrink: 0;
-      color: var(--ink-muted);
+      color: var(--ink-secondary);
       transform: translateY(2px);
       transition: color 0.15s var(--ease), opacity 0.15s var(--ease);
     }
@@ -458,21 +496,28 @@
       content: "· ";
     }
 
-    /* Visited State — Opaque Canvas Background so Spine Line Does Not Bleed Through */
+    /* Visited State — Recessed Surface with Accessible Secondary Contrast */
     a.link-card.visited {
-      background-color: var(--bg-canvas);
-      color: var(--ink-muted);
+      background-color: var(--bg-visited);
+      border-color: var(--line);
+      box-shadow: none;
+      color: var(--ink-secondary);
+    }
+
+    a.link-card.visited:hover {
+      border-color: var(--line-strong);
+      color: var(--ink-primary);
     }
 
     a.link-card.visited svg.yt-icon,
     a.link-card.visited svg.type-icon {
-      opacity: 0.5;
+      color: var(--ink-muted);
     }
 
     .tag-visited {
       font-family: var(--font-mono);
       font-size: 0.68rem;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--ink-muted);
       margin-left: 0.4rem;
       white-space: nowrap;
@@ -489,7 +534,7 @@
       display: none;
       padding: 3rem 1rem;
       text-align: center;
-      background-color: var(--bg-canvas);
+      background-color: var(--bg-elevated);
       color: var(--ink-secondary);
       font-size: 0.9rem;
       border: 1px dashed var(--line-strong);
@@ -519,8 +564,11 @@
         padding: 0.65rem 1rem;
       }
       .top-nav {
-        gap: 1rem;
-        font-size: 0.8rem;
+        gap: 0.15rem;
+        font-size: 0.78rem;
+      }
+      .top-nav a {
+        padding: 0.28rem 0.6rem;
       }
       .top-actions {
         width: 100%;
@@ -542,7 +590,7 @@
   <!-- Sticky Top Bar -->
   <header class="top-bar">
     <div class="top-bar-inner">
-      <a href="#top" class="brand-wordmark" id="brand-title-top">Toxico Index</a>
+      <a href="#top" class="brand-wordmark">Toxico Index</a>
 
       <nav class="top-nav" aria-label="Primary Navigation">
         <a href="#section-video" class="is-active" data-target="section-video">Lectures</a>
@@ -584,11 +632,11 @@
     </div>
 
     <!-- SECTION 01: VIDEO LECTURE LINKS -->
-    <section id="section-video" class="section" data-section-type="video">
+    <section id="section-video" class="section">
       <header class="section-header">
         <div class="section-header-top">
           <span class="spine-kicker">SECTION 01</span>
-          <span class="section-meta">54 lectures · YouTube</span>
+          <span class="section-meta" data-unit="lectures · YouTube">57 lectures · YouTube</span>
         </div>
         <h2 class="spine-title">Video Lecture Links</h2>
       </header>
@@ -596,37 +644,37 @@
       <div class="section-content">
         <h3><span class="topic-index">01.1</span> Introduction &amp; General Management</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=6fJMoLbPzV0&t=2s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=6fJMoLbPzV0" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Introduction to Toxicology</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=vBTVgSYmksA" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=vBTVgSYmksA" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Introduction toxico</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=WsRUt1tde7k" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=WsRUt1tde7k" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">General Management</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=B8Ur0ZoRx6Q" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=B8Ur0ZoRx6Q" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Toxicologic Emergency for R2 (1)</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=KhiWkbxAdog" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=KhiWkbxAdog" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Toxicologic Emergency for R2 (2)</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=A19f-qhtCMY&t=1s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=A19f-qhtCMY" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Ped tox EMTOX</span>
@@ -636,31 +684,31 @@
 
         <h3><span class="topic-index">01.2</span> Toxicologic Emergencies &amp; Syndromes</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=Pl6usdPiYtw&t=5s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=Pl6usdPiYtw" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">EMTox BB CCB Dig</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=kYLVCor3FZ4&t=3s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=kYLVCor3FZ4" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Met acidosis TOX</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=TnDKdfmrjEk" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=TnDKdfmrjEk" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Drug induced hyperthermia</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=FRDA8KQDXpE" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=FRDA8KQDXpE" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">SS &amp; NMS</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=Uig5VOUuU4k" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=Uig5VOUuU4k" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Drug interaction</span>
@@ -670,55 +718,55 @@
 
         <h3><span class="topic-index">01.3</span> Drugs of Abuse &amp; Psychotropic Drugs</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=bZSFAewiLNI" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=bZSFAewiLNI" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Psychotropic drugs</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=ZJZjaB4Oscw" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=ZJZjaB4Oscw" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Psychotropic</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=IEzrba9y7pg&t=1s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=IEzrba9y7pg" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Substance abuse dent1 1</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=fLIQcf8sufI" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=fLIQcf8sufI" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Amphetamine &amp; Substance abuse</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=P_o8oUz3wBE" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=P_o8oUz3wBE" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">การใช้ยาแผนปัจจุบันเพื่อการเสพติด</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=Ggc7_83WJ2s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=Ggc7_83WJ2s" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Hallucinogenic substance</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=bMEFGnfZ1oA" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=bMEFGnfZ1oA" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Toxicology of Cannabis and Kratom</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=S0zCCpqrxl0" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=S0zCCpqrxl0" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Complications of cannabis</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=VunB5Mbchoo" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=VunB5Mbchoo" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Lithium</span>
@@ -728,25 +776,25 @@
 
         <h3><span class="topic-index">01.4</span> Analgesics &amp; Common Medications</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=9dKfq50utGI" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=9dKfq50utGI" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Analgesic</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=7wp4JiD3k_I" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=7wp4JiD3k_I" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Paracetamol overdose</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=J_NOw7yAc2I" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=J_NOw7yAc2I" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Salicylate</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=kdDL9lgnhUU" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=kdDL9lgnhUU" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Local anesthetics</span>
@@ -756,13 +804,13 @@
 
         <h3><span class="topic-index">01.5</span> Toxic Alcohols</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=Lcz7jbBl_Lk&t=9s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=Lcz7jbBl_Lk" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Ethanol and toxic alcohols</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=hbF1orJciyQ" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=hbF1orJciyQ" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Ethanol</span>
@@ -772,37 +820,37 @@
 
         <h3><span class="topic-index">01.6</span> Bites, Stings &amp; Marine Envenomation</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=KAsGWh1AogE" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=KAsGWh1AogE" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Bite and sting</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=HzdBT4Xk61s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=HzdBT4Xk61s" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Snake Bite ภาค 1</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=UWQI0-G6Lg8" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=UWQI0-G6Lg8" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Snake Bite ภาค 2</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=K8iBSaYG7tQ&t=1s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=K8iBSaYG7tQ" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Marine poisoning</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=hvl43rE_Rlo" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=hvl43rE_Rlo" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Marine envenomation</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=vET-rcWT278" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=vET-rcWT278" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Tox in the news Concise Review Jellyfish Envenomation Tetrodotoxin Poisoning<span class="tag-new">New</span></span>
@@ -812,25 +860,25 @@
 
         <h3><span class="topic-index">01.7</span> Pesticides, Herbicides &amp; Rodenticides</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=P8lsZgndFFY&t=104s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=P8lsZgndFFY" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Pesticide updated</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=diA_DLktniU" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=diA_DLktniU" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">โรคจากสารกำจัดแมลง</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=jJz69yEyzdo" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=jJz69yEyzdo" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">ภาวะพิษจากสารกำจัดวัชพืช</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=4yDbbdNIO0w" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=4yDbbdNIO0w" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Rodenticide</span>
@@ -840,49 +888,49 @@
 
         <h3><span class="topic-index">01.8</span> Gases, Hydrocarbons &amp; Hazmat</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=PzLbgMaU0Cs" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=PzLbgMaU0Cs" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Hydrocarbon and Simple asphyxia</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=7Ec9JuQhC5M" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=7Ec9JuQhC5M" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Hydrocarbon</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=qoqZC3hg4yo&t=1s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=qoqZC3hg4yo" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Carbon monoxide poisoning</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=5ZJieZcsJ0k" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=5ZJieZcsJ0k" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">CN HS 2020 Aj Pom updated</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?si=EOqLJKvABPlkg28h&v=joqeQbMP_Zk&feature=youtu.be" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=joqeQbMP_Zk" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">CN &amp; H2S poisoning</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=RF6JF0KOnSc&t=2s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=RF6JF0KOnSc" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Irritant gas</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=xQE1yEYWaC8&t=1s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=xQE1yEYWaC8" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Hazadous material resuscitation</span>
+              <span class="card-content">Hazardous material resuscitation</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=XJnZ65YLxGM&t=1s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=XJnZ65YLxGM" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Completed PPE suit</span>
@@ -892,19 +940,19 @@
 
         <h3><span class="topic-index">01.9</span> Heavy Metals</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=UvUToXTWE-g" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=UvUToXTWE-g" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Lead</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=-W3dR8HC6E4" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=-W3dR8HC6E4" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Arsenic</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=sDDhREtC9Is" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=sDDhREtC9Is" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Iron</span>
@@ -914,19 +962,19 @@
 
         <h3><span class="topic-index">01.10</span> Caustic Agents &amp; Household Products</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=6J9fIalzNMw&t=2s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=6J9fIalzNMw" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Caustic agent update</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=mTA7MxVtbUk" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=mTA7MxVtbUk" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Caustic agent</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=KssH8-zuOpU" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=KssH8-zuOpU" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Household product</span>
@@ -936,19 +984,19 @@
 
         <h3><span class="topic-index">01.11</span> Methemoglobinemia</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=pfkTCpm1ySY" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=pfkTCpm1ySY" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Methemoglobinemia 2025</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=9jlea7Zj03E" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=9jlea7Zj03E" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Methemoglobinemia</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=_pBAuvaXeJM" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=_pBAuvaXeJM" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Sausage nitrite methemoglobinemia</span>
@@ -958,25 +1006,25 @@
 
         <h3><span class="topic-index">01.12</span> Plants &amp; Mushrooms</h3>
         <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=ChhpmKKMLso&t=1s" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=ChhpmKKMLso" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Plants for EMtox 2021</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=kUzanOXc9fI" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=kUzanOXc9fI" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Poisonous plants</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=4NoNgsBtfxQ" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=4NoNgsBtfxQ" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Mushroom poisoning</span>
             </div>
           </a>
-          <a href="https://www.youtube.com/watch?v=5Ldu0ewbGgk" class="link-card" data-type="video" target="_blank" rel="noopener">
+          <a href="https://www.youtube.com/watch?v=5Ldu0ewbGgk" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
               <span class="card-content">Mushroom poisoning current evidence studies<span class="tag-new">New</span></span>
@@ -987,11 +1035,11 @@
     </section>
 
     <!-- SECTION 02: LOCAL FILES (PDF & HTML) -->
-    <section id="section-file" class="section" data-section-type="file">
+    <section id="section-file" class="section">
       <header class="section-header">
         <div class="section-header-top">
           <span class="spine-kicker">SECTION 02</span>
-          <span class="section-meta">4 documents · PDF / HTML</span>
+          <span class="section-meta" data-unit="documents · PDF / HTML">4 documents · PDF / HTML</span>
         </div>
         <h2 class="spine-title">Files &amp; Clinical Guidelines</h2>
       </header>
@@ -999,19 +1047,19 @@
       <div class="section-content">
         <h3><span class="topic-index">02.1</span> Snakebite &amp; Antivenom Clinical Guidelines</h3>
         <div class="links-grid">
-          <a href="Neurotoxic%20snakebites.pdf" class="link-card" data-type="file" target="_blank" rel="noopener">
+          <a href="pdfs/Neurotoxic%20snakebites.pdf" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
               <span class="card-content">แนวทางดูแล Neurotoxic Snakebites (ศ.พิษวิทยา รามาธิบดี)</span>
             </div>
           </a>
-          <a href="วิธีให้%20Antivenom%20neurototoxin%20Snake.docx.pdf" class="link-card" data-type="file" target="_blank" rel="noopener">
+          <a href="pdfs/วิธีให้%20Antivenom%20neurototoxin%20Snake.docx.pdf" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
               <span class="card-content">วิธีให้ Antivenom Neurotoxin Snake</span>
             </div>
           </a>
-          <a href="Allergic%20reaction%20to%20antivenom_Ver%202.pdf" class="link-card" data-type="file" target="_blank" rel="noopener">
+          <a href="pdfs/Allergic%20reaction%20to%20antivenom_Ver%202.pdf" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
               <span class="card-content">แนวทางการรักษาภาวะแพ้เซรุ่มแก้พิษงู Allergic Reactions to Antivenom Ver.2</span>
@@ -1021,7 +1069,7 @@
 
         <h3><span class="topic-index">02.2</span> Interactive Presentations &amp; Slides</h3>
         <div class="links-grid">
-          <a href="ARDS_presentation.html" class="link-card" data-type="file" target="_blank" rel="noopener">
+          <a href="docs/ARDS_presentation.html" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
               <span class="card-content">ARDS Masterclass — Acute Respiratory Distress Syndrome<span class="tag-new">New</span></span>
@@ -1032,11 +1080,11 @@
     </section>
 
     <!-- SECTION 03: ARTICLES, RESEARCH PAPERS & EXTERNAL WEB LINKS -->
-    <section id="section-link" class="section" data-section-type="link">
+    <section id="section-link" class="section">
       <header class="section-header">
         <div class="section-header-top">
           <span class="spine-kicker">SECTION 03</span>
-          <span class="section-meta">10 references · External web</span>
+          <span class="section-meta" data-unit="references · External web">10 references · External web</span>
         </div>
         <h2 class="spine-title">Articles, Papers &amp; Web Links</h2>
       </header>
@@ -1044,37 +1092,37 @@
       <div class="section-content">
         <h3><span class="topic-index">03.1</span> Research Papers &amp; Medical Journals</h3>
         <div class="links-grid">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/36744989/" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/36744989/" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Dexamethasone therapy for CO poisoning</span>
             </div>
           </a>
-          <a href="https://pubmed.ncbi.nlm.nih.gov/23554277/" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/23554277/" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Neuroprotective effects of erythropoietin in CO poisoning</span>
             </div>
           </a>
-          <a href="https://pubmed.ncbi.nlm.nih.gov/22748972/" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/22748972/" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Post-mortem redistribution of antipsychotic drugs</span>
             </div>
           </a>
-          <a href="https://www.sciencedirect.com/science/article/abs/pii/S0379073804001033?via%3Dihub" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://www.sciencedirect.com/science/article/abs/pii/S0379073804001033" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Postmortem toxicology of drugs of abuse</span>
             </div>
           </a>
-          <a href="https://journals.plos.org/plosntds/article/figures?id=10.1371/journal.pntd.0002302" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://journals.plos.org/plosntds/article/figures?id=10.1371/journal.pntd.0002302" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Neurotoxicity in Snakebite</span>
             </div>
           </a>
-          <a href="https://www.researchgate.net/publication/247153915_Muscarinic_Toxicity_Among_Family_Members_After_Consumption_of_Mushrooms" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://www.researchgate.net/publication/247153915_Muscarinic_Toxicity_Among_Family_Members_After_Consumption_of_Mushrooms" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Muscarinic Toxicity</span>
@@ -1084,25 +1132,25 @@
 
         <h3><span class="topic-index">03.2</span> Clinical Articles &amp; Reference Links</h3>
         <div class="links-grid">
-          <a href="https://www.emdocs.net/efficacy-of-hypertonic-saline-for-tricyclic-antidepressant-overdose/" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://www.emdocs.net/efficacy-of-hypertonic-saline-for-tricyclic-antidepressant-overdose/" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Efficacy of Hypertonic Saline for Tricyclic Antidepressant Overdose</span>
             </div>
           </a>
-          <a href="https://www.betterhealth.vic.gov.au/health/healthyliving/copper-chrome-arsenic-cca-treated-timber" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://www.epa.nsw.gov.au/Your-environment/Household-building-and-renovation/Treated-timber/timber-treatments/copper-chrome-arsenate-treated-timber" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">CCA treated timber</span>
             </div>
           </a>
-          <a href="https://edition.cnn.com/2024/03/21/climate/arsenic-contaminated-water-bangladesh-climate-intl/index.html" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://edition.cnn.com/2024/03/21/climate/arsenic-contaminated-water-bangladesh-climate-intl/index.html" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Arsenic-contaminated water - CNN</span>
             </div>
           </a>
-          <a href="https://www.britannica.com/biography/Mary-Ann-Cotton" class="link-card" data-type="link" target="_blank" rel="noopener">
+          <a href="https://www.britannica.com/biography/Mary-Ann-Cotton" class="link-card" target="_blank" rel="noopener">
             <div class="card-left">
               <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
               <span class="card-content">Mary Ann Cotton | Biography</span>
@@ -1126,10 +1174,25 @@
     const sunIcon = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
     const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
 
+    function setTheme(theme) {
+      const resolved = theme === 'dark' ? 'dark' : 'light';
+      htmlElem.setAttribute('data-theme', resolved);
+      themeIcon.innerHTML = resolved === 'dark' ? sunIcon : moonIcon;
+      try {
+        localStorage.setItem('toxico_theme', resolved);
+      } catch (_) {}
+    }
+
+    try {
+      const savedTheme = localStorage.getItem('toxico_theme');
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        setTheme(savedTheme);
+      }
+    } catch (_) {}
+
     themeToggle.addEventListener('click', () => {
       const nextTheme = htmlElem.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      htmlElem.setAttribute('data-theme', nextTheme);
-      themeIcon.innerHTML = nextTheme === 'dark' ? sunIcon : moonIcon;
+      setTheme(nextTheme);
     });
 
     const searchInput = document.getElementById('search-input');
@@ -1141,9 +1204,16 @@
     const allHeadings = document.querySelectorAll('.section-content h3');
     const navLinks = document.querySelectorAll('.top-nav a');
     const pageShell = document.querySelector('.page-shell');
+    const linkCards = document.querySelectorAll('a.link-card');
+
+    // Cache clean searchable text per card (before runtime .tag-visited injection)
+    linkCards.forEach(card => {
+      const contentEl = card.querySelector('.card-content') || card;
+      card.dataset.searchText = contentEl.textContent.toLowerCase().trim();
+    });
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === '/' && document.activeElement !== searchInput) {
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && document.activeElement !== searchInput) {
         e.preventDefault();
         searchInput.focus();
       } else if (e.key === 'Escape' && document.activeElement === searchInput) {
@@ -1158,14 +1228,17 @@
       let anySectionVisible = false;
 
       linkGrids.forEach(grid => {
+        const heading = grid.previousElementSibling;
+        const headingMatch = heading && heading.tagName === 'H3' && heading.textContent.toLowerCase().includes(query);
         let hasVisibleCard = false;
+
         grid.querySelectorAll('.link-card').forEach(card => {
-          const match = card.textContent.toLowerCase().includes(query);
+          const cardMatch = (card.dataset.searchText || card.textContent.toLowerCase()).includes(query);
+          const match = !query || headingMatch || cardMatch;
           card.style.display = match ? '' : 'none';
           if (match) hasVisibleCard = true;
         });
 
-        const heading = grid.previousElementSibling;
         if (heading && heading.tagName === 'H3') {
           heading.style.display = hasVisibleCard ? '' : 'none';
         }
@@ -1173,9 +1246,18 @@
       });
 
       sections.forEach(section => {
-        const hasVisibleGrid = Array.from(section.querySelectorAll('.links-grid'))
-          .some(grid => grid.style.display !== 'none');
+        const allCardsInSection = section.querySelectorAll('.link-card');
+        const visibleCardsCount = Array.from(allCardsInSection).filter(c => c.style.display !== 'none').length;
+        const hasVisibleGrid = visibleCardsCount > 0;
         section.style.display = hasVisibleGrid ? '' : 'none';
+
+        const metaEl = section.querySelector('.section-meta');
+        if (metaEl && metaEl.dataset.unit) {
+          metaEl.textContent = query
+            ? `${visibleCardsCount} / ${allCardsInSection.length} ${metaEl.dataset.unit}`
+            : `${allCardsInSection.length} ${metaEl.dataset.unit}`;
+        }
+
         if (hasVisibleGrid) anySectionVisible = true;
       });
 
@@ -1209,10 +1291,14 @@
         spineFill.style.height = `${pct}%`;
       }
 
-      let activeSectionId = 'section-video';
+      const visibleSections = Array.from(sections).filter(sec => sec.style.display !== 'none');
+      let activeSectionId = visibleSections.length > 0 ? visibleSections[0].id : '';
 
       sections.forEach(sec => {
-        if (sec.style.display === 'none') return;
+        if (sec.style.display === 'none') {
+          sec.classList.remove('is-reached', 'is-active');
+          return;
+        }
         const reached = lineTipInShell >= (sec.offsetTop + 8);
         sec.classList.toggle('is-reached', reached);
         if (reached) {
@@ -1229,24 +1315,25 @@
       });
 
       // Highlight sub-topics reached by the vertical progress line
-      let hasReachedHeading = false;
+      let lastReachedHeading = null;
+      let firstVisibleHeading = null;
+
       allHeadings.forEach(h3 => {
+        h3.classList.remove('in-view', 'is-reached');
         if (h3.style.display === 'none') return;
+        if (!firstVisibleHeading) firstVisibleHeading = h3;
+
         const h3Rect = h3.getBoundingClientRect();
         const h3TopInShell = (scrollTop + h3Rect.top) - shellTop;
-        const h3Reached = lineTipInShell >= (h3TopInShell + 4);
-        h3.classList.toggle('is-reached', h3Reached);
-
-        if (h3Reached) {
-          allHeadings.forEach(other => other.classList.remove('in-view'));
-          h3.classList.add('in-view');
-          hasReachedHeading = true;
+        if (lineTipInShell >= (h3TopInShell + 4)) {
+          h3.classList.add('is-reached');
+          lastReachedHeading = h3;
         }
       });
 
-      if (!hasReachedHeading && allHeadings.length > 0) {
-        allHeadings[0].classList.add('in-view');
-        allHeadings[0].classList.add('is-reached');
+      const activeHeading = lastReachedHeading || firstVisibleHeading;
+      if (activeHeading) {
+        activeHeading.classList.add('in-view', 'is-reached');
       }
     }
 
@@ -1254,9 +1341,15 @@
     window.addEventListener('resize', updateScrollProgress, { passive: true });
     updateScrollProgress();
 
-    // Visited links persistence
-    let visitedUrls = JSON.parse(localStorage.getItem('toxico_visited') || '[]');
-    const linkCards = document.querySelectorAll('a.link-card');
+    // Visited links persistence with safe JSON parsing
+    let visitedUrls = [];
+    try {
+      const parsed = JSON.parse(localStorage.getItem('toxico_visited') || '[]');
+      if (Array.isArray(parsed)) visitedUrls = parsed;
+    } catch (_) {
+      visitedUrls = [];
+    }
+
     const resetHistoryBtn = document.getElementById('reset-history-btn');
 
     function markCardVisited(card) {
@@ -1279,14 +1372,18 @@
       card.addEventListener('click', () => {
         if (!visitedUrls.includes(card.href)) {
           visitedUrls.push(card.href);
-          localStorage.setItem('toxico_visited', JSON.stringify(visitedUrls));
+          try {
+            localStorage.setItem('toxico_visited', JSON.stringify(visitedUrls));
+          } catch (_) {}
         }
         markCardVisited(card);
       });
     });
 
     resetHistoryBtn.addEventListener('click', () => {
-      localStorage.removeItem('toxico_visited');
+      try {
+        localStorage.removeItem('toxico_visited');
+      } catch (_) {}
       visitedUrls = [];
       linkCards.forEach(card => {
         card.classList.remove('visited');
