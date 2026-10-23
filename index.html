@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toxico Course Bookmarks</title>
+  <title>Toxico — Clinical Toxicology Resources</title>
   <meta name="description" content="Clinical toxicology course bookmarks, lecture links, research papers, and antivenom clinical guidelines.">
-  <meta property="og:title" content="Toxico Course Bookmarks">
+  <meta property="og:title" content="Toxico — Clinical Toxicology Resources">
   <meta property="og:description" content="Clinical toxicology course bookmarks, lecture links, research papers, and antivenom clinical guidelines.">
   <meta name="theme-color" content="#F3F1EC" id="meta-theme-color">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23B93421'/%3E%3Cpath d='M16 6v20M10 12l6-6 6 6M10 20l6 6 6-6' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23B93421'/%3E%3Cpath d='M12.5 6h7a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1h-.7v2.8l5.6 9.8A2.5 2.5 0 0 1 22.2 26H9.8a2.5 2.5 0 0 1-2.2-3.9l5.6-9.8V9.5h-.7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z' fill='%23ffffff'/%3E%3Crect x='14.6' y='15.7' width='2.8' height='6.6' rx='0.6' fill='%23B93421'/%3E%3Crect x='12.7' y='17.6' width='6.6' height='2.8' rx='0.6' fill='%23B93421'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23B93421'/%3E%3Cpath d='M12.5 6h7a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1h-.7v2.8l5.6 9.8A2.5 2.5 0 0 1 22.2 26H9.8a2.5 2.5 0 0 1-2.2-3.9l5.6-9.8V9.5h-.7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z' fill='%23ffffff'/%3E%3Crect x='14.6' y='15.7' width='2.8' height='6.6' rx='0.6' fill='%23B93421'/%3E%3Crect x='12.7' y='17.6' width='6.6' height='2.8' rx='0.6' fill='%23B93421'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -785,7 +786,6 @@
       transition: fill 0.35s var(--ease), stroke 0.35s var(--ease);
     }
 
-    .spine-finale.is-node-reached .t-node,
     .spine-finale.is-cat-reached  .t-cat,
     .spine-finale.is-end-reached  .t-end {
       fill: var(--accent);
@@ -1048,15 +1048,12 @@
           <path class="finale-target t-end" d="M 308 62 L 309.5 66 L 313.5 67.5 L 309.5 69 L 308 73 L 306.5 69 L 302.5 67.5 L 306.5 66 Z"/>
 
           <!-- 2. Horizontal Branch Line from Left Spine Through Center (y=150) -->
-          <path id="finale-branch-track" class="finale-branch-track" d="M 24 150 H 352"/>
-          <path id="finale-branch-fill-right" class="finale-branch-fill" pathLength="1000" d="M 24 150 H 352"/>
+          <path id="finale-branch-track" class="finale-branch-track" d="M 24 150 H 3000"/>
+          <path id="finale-branch-fill-right" class="finale-branch-fill" pathLength="1000" d="M 24 150 H 3000"/>
 
-          <!-- 3. Spine Milestone Nodes (Dynamically aligned to vertical spine X) -->
-          <g id="finale-spine-nodes">
-            <circle class="finale-target t-node" cx="0" cy="44" r="6" stroke="var(--ink-primary)" stroke-width="2"/>
-            <circle class="finale-target t-cat" cx="0" cy="150" r="6" stroke="var(--ink-primary)" stroke-width="2"/>
-            <circle class="finale-target t-end" cx="0" cy="196" r="6" stroke="var(--ink-primary)" stroke-width="2"/>
-          </g>
+          <!-- 3. Spine Milestone Node at Junction (y=150) -->
+          <circle id="finale-spine-node" class="finale-target t-cat" cx="24" cy="150" r="6" stroke="var(--ink-primary)" stroke-width="2"/>
+
 
           <!-- 4. Left Prop: Minimalist Stacked Books & Botanical Leaf (x=180, y=150) -->
           <g transform="translate(180, 150)" stroke="var(--ink-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1561,7 +1558,7 @@
     const finaleSvg = document.getElementById('finale-svg');
     const finaleBranchTrack = document.getElementById('finale-branch-track');
     const finaleBranchRight = document.getElementById('finale-branch-fill-right');
-    const finaleSpineNodes = document.getElementById('finale-spine-nodes');
+    const finaleSpineNode = document.getElementById('finale-spine-node');
     const navLinks = Array.from(document.querySelectorAll('.top-nav a'));
     const allHeadings = Array.from(document.querySelectorAll('.section-content h3'));
     const linkCards = Array.from(document.querySelectorAll('.link-card'));
@@ -1570,7 +1567,6 @@
     const TAIL_SCROLL_RUNWAY = 180;
     const SVG_VIEWBOX_WIDTH = 480;
     const SVG_VIEWBOX_HEIGHT = 208;
-    const BRANCH_END_X = 352;
     let tailStartScrollY = 0;
 
     function getTopBarOffset() {
@@ -1588,10 +1584,16 @@
       const scaleX = SVG_VIEWBOX_WIDTH / svgRect.width;
       const spineSvgX = Math.round((spineCenterPx - svgRect.left) * scaleX * 10) / 10;
 
-      if (finaleSpineNodes) {
-        finaleSpineNodes.setAttribute('transform', `translate(${spineSvgX}, 0)`);
+      if (finaleSpineNode) {
+        finaleSpineNode.setAttribute('cx', spineSvgX);
       }
-      const branchPath = `M ${spineSvgX} 150 H ${BRANCH_END_X}`;
+
+      // Calculate right screen edge in SVG coordinate space so the line stretches all the way across to the viewport edge
+      const screenRightSvgX = Math.max(
+        SVG_VIEWBOX_WIDTH,
+        Math.round((window.innerWidth - svgRect.left) * scaleX + 120)
+      );
+      const branchPath = `M ${spineSvgX} 150 H ${screenRightSvgX}`;
       if (finaleBranchTrack) finaleBranchTrack.setAttribute('d', branchPath);
       if (finaleBranchRight) finaleBranchRight.setAttribute('d', branchPath);
     }
@@ -1658,10 +1660,8 @@
 
       spineFinale.style.minHeight = `${neededFinaleHeight}px`;
 
-      const svgH = finaleSvg.getBoundingClientRect().height;
-      const capY = (202 / SVG_VIEWBOX_HEIGHT) * svgH;   // y=196 + radius 6
       if (spineTrack) {
-        spineTrack.style.bottom = `${Math.max(0, spineFinale.offsetHeight - capY)}px`;
+        spineTrack.style.bottom = '0px';
       }
     }
 
