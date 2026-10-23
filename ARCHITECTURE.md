@@ -1,4 +1,4 @@
-# ARCHITECTURE.md — Toxico Course Bookmarks
+# ARCHITECTURE.md — Toxico Index
 
 ## 1. Components
 - **Header & Search Bar (`.top-bar`)**: Sticky header with course brand wordmark, segmented navigation rail (`.top-nav`), and action controls (`.top-actions`): live search input (`/` shortcut), icon-only Favorites filter toggle (`#favorites-filter-btn`), Reset History button (`#reset-history-btn` with inline two-step confirmation, dynamic `aria-label`, 3s auto-timeout, and WCAG AA dark mode contrast), and Dark/Light theme toggle (`#theme-toggle`).

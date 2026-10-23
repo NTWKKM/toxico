@@ -7,7 +7,7 @@ set -euo pipefail
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 INDEX_FILE="$BASE_DIR/index.html"
 
-echo "=== Toxico Course Bookmarks: Link Health Check ==="
+echo "=== Toxico Index: Link Health Check ==="
 echo "Scanning: $INDEX_FILE"
 
 PASS_COUNT=0

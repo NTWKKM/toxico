@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toxico — Clinical Toxicology Resources</title>
-  <meta name="description" content="Clinical toxicology course bookmarks, lecture links, research papers, and antivenom clinical guidelines.">
-  <meta property="og:title" content="Toxico — Clinical Toxicology Resources">
-  <meta property="og:description" content="Clinical toxicology course bookmarks, lecture links, research papers, and antivenom clinical guidelines.">
+  <title>Toxico Index — Clinical Toxicology Resources</title>
+  <meta name="description" content="Clinical toxicology index, lecture links, research papers, and antivenom clinical guidelines.">
+  <meta property="og:title" content="Toxico Index — Clinical Toxicology Resources">
+  <meta property="og:description" content="Clinical toxicology index, lecture links, research papers, and antivenom clinical guidelines.">
   <meta name="theme-color" content="#F3F1EC" id="meta-theme-color">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23B93421'/%3E%3Cpath d='M12.5 6h7a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1h-.7v2.8l5.6 9.8A2.5 2.5 0 0 1 22.2 26H9.8a2.5 2.5 0 0 1-2.2-3.9l5.6-9.8V9.5h-.7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z' fill='%23ffffff'/%3E%3Crect x='14.6' y='15.7' width='2.8' height='6.6' rx='0.6' fill='%23B93421'/%3E%3Crect x='12.7' y='17.6' width='6.6' height='2.8' rx='0.6' fill='%23B93421'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23B93421'/%3E%3Cpath d='M12.5 6h7a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1h-.7v2.8l5.6 9.8A2.5 2.5 0 0 1 22.2 26H9.8a2.5 2.5 0 0 1-2.2-3.9l5.6-9.8V9.5h-.7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z' fill='%23ffffff'/%3E%3Crect x='14.6' y='15.7' width='2.8' height='6.6' rx='0.6' fill='%23B93421'/%3E%3Crect x='12.7' y='17.6' width='6.6' height='2.8' rx='0.6' fill='%23B93421'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -952,7 +951,7 @@
 </head>
 <body>
   <!-- Visually Hidden Valid H1 Root (A3) -->
-  <h1 class="sr-only">Toxico Course Bookmarks — Clinical Toxicology Resources</h1>
+  <h1 class="sr-only">Toxico Index — Clinical Toxicology Resources</h1>
 
   <!-- Shared SVG Icon Definitions -->
   <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -1554,7 +1553,6 @@
     const spineTrack = document.querySelector('.spine-track');
     const spineFill = document.getElementById('spine-fill');
     const spineFinale = document.getElementById('spine-finale');
-    const finaleWrap = document.getElementById('finale-character-wrap');
     const finaleSvg = document.getElementById('finale-svg');
     const finaleBranchTrack = document.getElementById('finale-branch-track');
     const finaleBranchRight = document.getElementById('finale-branch-fill-right');
@@ -1713,7 +1711,9 @@
           scheduleScrollUpdate();
         }, 1500);
 
-        history.replaceState(null, '', '#top');
+        if (location.hash !== '#top') {
+          history.pushState(null, '', '#top');
+        }
         window.scrollTo({ top: 0, behavior: getScrollBehavior() });
         scheduleScrollUpdate();
       });
@@ -1757,7 +1757,9 @@
         }, 1500);
 
         // Deep linking update (D2)
-        history.replaceState(null, '', '#' + targetId);
+        if (location.hash !== '#' + targetId) {
+          history.pushState(null, '', '#' + targetId);
+        }
         window.scrollTo({ top: targetScrollY, behavior: getScrollBehavior() });
         scheduleScrollUpdate();
       });
@@ -2068,7 +2070,6 @@
       spineFill.style.height = `${lineTipY}px`;
 
       if (finaleSvgVisible) {
-        spineFinale.classList.toggle('is-node-reached', tipSvgY >= 44);
         spineFinale.classList.toggle('is-cat-reached',  tipSvgY >= 150);
         spineFinale.classList.toggle('is-end-reached',  tipSvgY >= 196);
 
@@ -2146,25 +2147,57 @@
     // 11. Initial View & Deep Link Resolution (D2)
     applyFilters();
 
-    if (location.hash) {
+    function navigateToHash(instant = false) {
       const hashId = location.hash.replace(/^#/, '');
-      const targetRecord = sectionRecords.find(r => r.id === hashId);
-      if (targetRecord) {
-        if (targetRecord.el.classList.contains('is-collapsed')) {
-          setSectionCollapsed(targetRecord, false);
-          collapsedSectionIds.delete(targetRecord.id);
-          saveStoredSet('toxico_collapsed', collapsedSectionIds);
-        }
-        updateBottomRunway();
-        requestAnimationFrame(() => {
-          const targetOffset = getTopBarOffset();
-          const headerEl = targetRecord.header || targetRecord.el;
-          const targetScrollY = Math.max(0, Math.round(window.scrollY + headerEl.getBoundingClientRect().top - targetOffset));
-          window.scrollTo({ top: targetScrollY, behavior: 'instant' });
-          scheduleScrollUpdate();
-        });
+      if (!hashId || hashId === 'top') {
+        clearNavPin();
+        window.scrollTo({ top: 0, behavior: instant ? 'instant' : getScrollBehavior() });
+        scheduleScrollUpdate();
+        return;
       }
+
+      const targetRecord = sectionRecords.find(r => r.id === hashId);
+      if (!targetRecord) return;
+
+      if (targetRecord.el.classList.contains('is-collapsed')) {
+        setSectionCollapsed(targetRecord, false);
+        collapsedSectionIds.delete(targetRecord.id);
+        saveStoredSet('toxico_collapsed', collapsedSectionIds);
+      }
+
+      if (targetRecord.el.style.display === 'none' && (searchInput.value || onlyFavorites)) {
+        searchInput.value = '';
+        onlyFavorites = false;
+        favoritesFilterBtn.classList.remove('is-active');
+        favoritesFilterBtn.setAttribute('aria-pressed', 'false');
+        applyFilters();
+      }
+
+      updateBottomRunway();
+
+      requestAnimationFrame(() => {
+        const targetOffset = getTopBarOffset();
+        const headerEl = targetRecord.header || targetRecord.el;
+        const targetScrollY = Math.max(0, Math.round(window.scrollY + headerEl.getBoundingClientRect().top - targetOffset));
+
+        navPinnedSectionId = targetRecord.id;
+        navTargetScrollY = targetScrollY;
+        if (navPinTimer) clearTimeout(navPinTimer);
+        navPinTimer = setTimeout(() => {
+          clearNavPin();
+          scheduleScrollUpdate();
+        }, 1500);
+
+        window.scrollTo({ top: targetScrollY, behavior: instant ? 'instant' : getScrollBehavior() });
+        scheduleScrollUpdate();
+      });
     }
+
+    if (location.hash) {
+      navigateToHash(true);
+    }
+
+    window.addEventListener('hashchange', () => navigateToHash(false));
   </script>
 </body>
 </html>
