@@ -7,16 +7,33 @@
   <meta name="description" content="Clinical toxicology course bookmarks, lecture links, research papers, and antivenom clinical guidelines.">
   <meta property="og:title" content="Toxico Course Bookmarks">
   <meta property="og:description" content="Clinical toxicology course bookmarks, lecture links, research papers, and antivenom clinical guidelines.">
+  <meta name="theme-color" content="#F3F1EC" id="meta-theme-color">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23B93421'/%3E%3Cpath d='M16 6v20M10 12l6-6 6 6M10 20l6 6 6-6' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('toxico_theme');
+        if (saved === 'dark' || saved === 'light') {
+          document.documentElement.dataset.theme = saved;
+        } else {
+          var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+        }
+      } catch (_) {}
+    })();
+  </script>
   <style>
-    :root {
+    :root,
+    [data-theme="light"] {
+      color-scheme: light;
       --font-display: 'Outfit', 'IBM Plex Sans Thai', sans-serif;
       --font-sans: 'Plus Jakarta Sans', 'IBM Plex Sans Thai', -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
 
-      /* Taste-Skill High-Contrast Alabaster & Carbon Ink Palette (WCAG AA/AAA) */
+      /* High-Contrast Alabaster & Carbon Ink Palette (WCAG AA compliant, accent contrast ratio 5.15:1 against canvas) */
       --bg-canvas: #F3F1EC;
       --bg-menu: rgba(255, 255, 255, 0.94);
       --bg-elevated: #FFFFFF;
@@ -30,15 +47,16 @@
       --line-strong: #ACA79C;
       --line-hover: #121211;
 
-      /* Controlled Clinical Accent */
-      --accent: #C83E2B;
-      --accent-soft: rgba(200, 62, 43, 0.14);
+      /* Controlled Clinical Accent darkened to meet >=4.5:1 WCAG AA (measured 5.15:1 against #F3F1EC) */
+      --accent: #B93421;
+      --accent-soft: rgba(185, 52, 33, 0.14);
       --shadow-card: 0 1px 2px rgba(18, 18, 17, 0.05);
       --shadow-card-hover: 0 4px 12px rgba(18, 18, 17, 0.08);
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     [data-theme="dark"] {
+      color-scheme: dark;
       --bg-canvas: #0B0B0A;
       --bg-menu: rgba(20, 20, 19, 0.94);
       --bg-elevated: #171715;
@@ -66,6 +84,7 @@
 
     html {
       scroll-behavior: smooth;
+      overflow-x: clip;
     }
 
     body {
@@ -74,9 +93,22 @@
       color: var(--ink-primary);
       line-height: 1.5;
       min-height: 100dvh;
+      overflow-x: clip;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+    }
+
+    /* Screen-reader accessible utility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     /* Sticky High-Contrast Top Bar */
@@ -98,7 +130,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 2rem;
+      gap: 1.5rem;
     }
 
     .brand-wordmark {
@@ -118,7 +150,7 @@
       color: var(--accent);
     }
 
-    /* Segmented Menu Rail with Distinct Active Contrast */
+    /* Segmented Menu Rail */
     .top-nav {
       display: flex;
       align-items: center;
@@ -200,6 +232,11 @@
       box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
+    .search-box input:focus ~ .search-kbd,
+    .search-box input:not(:placeholder-shown) ~ .search-kbd {
+      display: none;
+    }
+
     .search-kbd {
       position: absolute;
       right: 0.45rem;
@@ -226,6 +263,7 @@
       border-radius: 6px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.38rem;
       font-size: 0.78rem;
       font-family: inherit;
@@ -236,19 +274,36 @@
       transition: color 0.15s var(--ease), border-color 0.15s var(--ease), background-color 0.15s var(--ease), transform 0.1s var(--ease);
     }
 
-    .btn-ghost:hover {
+    .btn-ghost:hover,
+    .btn-ghost.is-active {
       color: var(--bg-elevated);
       border-color: var(--ink-primary);
       background: var(--ink-primary);
+    }
+
+    .btn-ghost.is-confirming {
+      color: #fff;
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    [data-theme="dark"] .btn-ghost.is-confirming {
+      color: #121211;
     }
 
     .btn-ghost:active {
       transform: translateY(1px);
     }
 
+    .btn-ghost.is-active svg {
+      fill: currentColor;
+    }
+
     .btn-ghost:focus-visible,
-    a.link-card:focus-visible,
-    .top-nav a:focus-visible {
+    .fav-btn:focus-visible,
+    .card-link:focus-visible,
+    .top-nav a:focus-visible,
+    .section-toggle:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
@@ -263,10 +318,11 @@
       position: relative;
       max-width: 1160px;
       margin: 0 auto;
-      padding: clamp(2rem, 4vw, 3.25rem) clamp(1.25rem, 3vw, 2.5rem) 5.5rem;
+      padding: clamp(2rem, 4vw, 3.25rem) clamp(1.25rem, 3vw, 2.5rem) 0;
+      scroll-margin-top: 4.75rem;
     }
 
-    /* Single Unbroken Vertical Progress Line Behind Content (z-index: 0) */
+    /* Single Unbroken Vertical Progress Line Behind Content */
     .spine-track {
       position: absolute;
       left: clamp(2.25rem, 5vw, 3.75rem);
@@ -283,12 +339,11 @@
       left: 0;
       top: 0;
       width: 100%;
-      height: 0%;
+      height: 0px;
       background: var(--accent);
-      transition: height 0.1s linear;
     }
 
-    /* Section Architecture Overlapping the Vertical Line (z-index: 2) */
+    /* Section Architecture Overlapping the Vertical Line */
     .section {
       position: relative;
       z-index: 2;
@@ -301,7 +356,6 @@
       margin-bottom: 0;
     }
 
-    /* Section Header — Masks Spine Line & Changes Color When Reached */
     .section-header {
       position: relative;
       z-index: 2;
@@ -309,7 +363,11 @@
       padding: 0.5rem 0 0.85rem 0;
       margin-bottom: 1.5rem;
       border-bottom: 1px solid var(--line);
-      transition: border-color 0.25s var(--ease), background-color 0.2s var(--ease);
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      border-radius: 4px;
+      transition: border-color 0.25s var(--ease), background-color 0.2s var(--ease), margin-bottom 0.2s var(--ease);
     }
 
     .section-header-top {
@@ -332,7 +390,7 @@
       align-items: center;
       gap: 0.45rem;
       font-variant-numeric: tabular-nums;
-      transition: color 0.25s var(--ease);
+      transition: color 0.1s var(--ease);
     }
 
     .spine-title {
@@ -342,7 +400,39 @@
       letter-spacing: -0.02em;
       line-height: 1.25;
       color: var(--ink-secondary);
-      transition: color 0.25s var(--ease);
+      transition: color 0.1s var(--ease);
+    }
+
+    /* Unstyled Accessible Section Button (A2) */
+    .section-toggle {
+      background: transparent;
+      border: none;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .section-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .section.is-collapsed {
+      margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+    }
+
+    .section.is-collapsed .section-header {
+      margin-bottom: 0;
+    }
+
+    .section.is-collapsed .section-content {
+      display: none;
     }
 
     .section-meta {
@@ -353,12 +443,12 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* Reached & Active Section States (Triggered When Vertical Line Reaches Section 01, 02, 03) */
-    .section.is-reached .section-header {
+    /* Reached & Active Section States */
+    .section.is-border-reached .section-header {
       border-bottom-color: var(--line-strong);
     }
 
-    .section.is-reached .spine-kicker {
+    .spine-kicker.is-reached {
       color: var(--accent);
     }
 
@@ -376,7 +466,7 @@
       min-width: 0;
     }
 
-    /* Sub-Topic Headings — Opaque Canvas Background Overlaps Spine Track */
+    /* Sub-Topic Headings */
     h3 {
       position: relative;
       z-index: 2;
@@ -387,19 +477,20 @@
       color: var(--ink-secondary);
       background-color: var(--bg-canvas);
       margin: 1.85rem 0 0.75rem 0;
-      padding: 0.2rem 0.65rem 0.2rem 0;
-      display: inline-flex;
+      padding: 0.22rem 0.65rem 0.22rem 0;
+      display: flex;
+      width: fit-content;
+      max-width: 100%;
       align-items: baseline;
       gap: 0.5rem;
-      transition: color 0.2s var(--ease), background-color 0.2s var(--ease);
+      transition: color 0.1s var(--ease), background-color 0.2s var(--ease);
     }
 
     h3:first-of-type {
       margin-top: 0.15rem;
     }
 
-    h3.is-reached,
-    h3.in-view {
+    h3.is-reached {
       color: var(--ink-primary);
     }
 
@@ -409,15 +500,15 @@
       font-weight: 600;
       color: var(--ink-muted);
       font-variant-numeric: tabular-nums;
-      transition: color 0.2s var(--ease);
+      flex-shrink: 0;
+      transition: color 0.1s var(--ease);
     }
 
-    h3.is-reached .topic-index,
-    h3.in-view .topic-index {
+    h3.is-reached .topic-index {
       color: var(--accent);
     }
 
-    /* 3-Column High-Contrast Card Grid Overlapping the Background Spine Line */
+    /* 3-Column High-Contrast Card Grid */
     .links-grid {
       position: relative;
       z-index: 2;
@@ -426,7 +517,8 @@
       gap: 0.7rem;
     }
 
-    a.link-card {
+    /* Accessible Card Component (A1) */
+    .link-card {
       position: relative;
       z-index: 2;
       display: flex;
@@ -439,18 +531,47 @@
       border-radius: 8px;
       box-shadow: var(--shadow-card);
       color: var(--ink-primary);
-      text-decoration: none;
       font-size: 0.86rem;
       font-weight: 500;
       line-height: 1.42;
       transition: background-color 0.15s var(--ease), border-color 0.15s var(--ease), box-shadow 0.15s var(--ease), transform 0.15s var(--ease), color 0.15s var(--ease);
     }
 
-    a.link-card:hover {
+    .link-card:hover {
       background-color: var(--bg-hover);
       border-color: var(--line-hover);
       box-shadow: var(--shadow-card-hover);
       transform: translateY(-1px);
+    }
+
+    .link-card:focus-within {
+      border-color: var(--ink-primary);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .card-link {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      min-width: 0;
+      flex: 1;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Pseudo-element makes whole card area clickable */
+    .card-link::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: 8px;
+    }
+
+    .card-link:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
     }
 
     .card-left {
@@ -461,25 +582,73 @@
       flex: 1;
     }
 
-    /* Crisp Monochrome Affordance Icons */
-    a.link-card svg.yt-icon,
-    a.link-card svg.type-icon {
+    .link-card svg.card-icon {
       width: 0.92rem;
       height: 0.92rem;
       flex-shrink: 0;
       color: var(--ink-secondary);
       transform: translateY(2px);
-      transition: color 0.15s var(--ease), opacity 0.15s var(--ease);
+      transition: color 0.15s var(--ease);
     }
 
-    a.link-card:hover svg.yt-icon,
-    a.link-card:hover svg.type-icon {
+    .link-card:hover svg.card-icon {
       color: var(--accent);
     }
 
     .card-content {
       flex: 1;
-      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    /* Card Favorite Star Button (Accessible Hit Target & Stacking) */
+    .fav-btn {
+      position: relative;
+      z-index: 1;
+      background: transparent;
+      border: none;
+      width: 2.2rem;
+      height: 2.2rem;
+      padding: 0;
+      margin: -0.45rem -0.45rem -0.45rem 0;
+      border-radius: 6px;
+      color: var(--ink-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      opacity: 0.45;
+      transition: color 0.15s var(--ease), opacity 0.15s var(--ease), transform 0.12s var(--ease);
+    }
+
+    .link-card:hover .fav-btn,
+    .fav-btn:focus-visible {
+      opacity: 0.85;
+    }
+
+    .fav-btn:hover {
+      opacity: 1 !important;
+      color: var(--accent);
+      transform: scale(1.12);
+    }
+
+    .fav-btn.is-favorite {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .fav-btn svg {
+      width: 0.95rem;
+      height: 0.95rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .fav-btn.is-favorite svg {
+      fill: currentColor;
     }
 
     /* Unboxed Quiet Metadata Indicators */
@@ -496,21 +665,20 @@
       content: "· ";
     }
 
-    /* Visited State — Recessed Surface with Accessible Secondary Contrast */
-    a.link-card.visited {
+    /* Visited State */
+    .link-card.visited {
       background-color: var(--bg-visited);
       border-color: var(--line);
       box-shadow: none;
       color: var(--ink-secondary);
     }
 
-    a.link-card.visited:hover {
+    .link-card.visited:hover {
       border-color: var(--line-strong);
       color: var(--ink-primary);
     }
 
-    a.link-card.visited svg.yt-icon,
-    a.link-card.visited svg.type-icon {
+    .link-card.visited svg.card-icon {
       color: var(--ink-muted);
     }
 
@@ -545,6 +713,161 @@
       margin-top: 0.75rem;
     }
 
+    /* Bottom Spine Runway & Minimalist Centered Cat Scene */
+    .spine-finale {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      margin-top: clamp(2.5rem, 4.5vw, 4rem);
+      padding: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .finale-character-wrap {
+      position: relative;
+      display: block;
+      width: clamp(340px, 54vw, 520px);
+      margin: 0 auto;
+      flex-shrink: 0;
+    }
+
+    .finale-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    /* Minimalist Finale Scene Animations & Interactive States */
+    @keyframes tailPendulum {
+      0%, 100% { transform: rotate(-6deg); }
+      50% { transform: rotate(8deg); }
+    }
+    @keyframes eyeBlink {
+      0%, 45%, 48%, 100% { transform: scaleY(1); }
+      46.5% { transform: scaleY(0.08); }
+    }
+    @keyframes bubbleFloat {
+      0% { transform: translateY(0) scale(0.9); opacity: 0; }
+      30% { opacity: 0.85; }
+      80% { opacity: 0.55; }
+      100% { transform: translateY(-16px) scale(1.08); opacity: 0; }
+    }
+
+    .svg-tail {
+      transform-box: fill-box;
+      transform-origin: 90% 85%;
+      animation: tailPendulum 3.6s ease-in-out infinite;
+    }
+    .svg-eye-blink {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: eyeBlink 6s ease-in-out infinite;
+    }
+    .svg-bubble-1 {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: bubbleFloat 3.8s ease-in-out infinite;
+    }
+    .svg-bubble-2 {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: bubbleFloat 4.4s ease-in-out 1.6s infinite;
+    }
+
+    .finale-target {
+      fill: var(--bg-subtle);
+      transition: fill 0.35s var(--ease), stroke 0.35s var(--ease);
+    }
+
+    .spine-finale.is-node-reached .t-node,
+    .spine-finale.is-cat-reached  .t-cat,
+    .spine-finale.is-end-reached  .t-end {
+      fill: var(--accent);
+    }
+
+    .finale-halo {
+      fill: var(--bg-subtle);
+      opacity: 0.55;
+      transition: fill 0.4s var(--ease), opacity 0.4s var(--ease);
+    }
+    .spine-finale.is-cat-reached .finale-halo {
+      fill: var(--accent-soft);
+      opacity: 1;
+    }
+
+    .finale-branch-track {
+      stroke: var(--line-strong);
+      stroke-width: 2;
+      stroke-linecap: round;
+      fill: none;
+    }
+    .finale-branch-fill {
+      stroke: var(--accent);
+      stroke-width: 2;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+    }
+
+    /* C3: pause offscreen */
+    .spine-finale.is-paused .svg-tail,
+    .spine-finale.is-paused .svg-eye-blink,
+    .spine-finale.is-paused .svg-bubble-1,
+    .spine-finale.is-paused .svg-bubble-2 {
+      animation-play-state: paused;
+    }
+
+    /* Theme switch: View Transitions (primary) */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.3s;
+      animation-timing-function: ease;
+    }
+
+    /* Theme switch: fallback for browsers without View Transitions */
+    .theme-switching,
+    .theme-switching *,
+    .theme-switching *::before,
+    .theme-switching *::after {
+      transition: background-color .3s ease, color .3s ease, border-color .3s ease,
+                  fill .3s ease, stroke .3s ease, box-shadow .3s ease !important;
+    }
+
+    /* C1: reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto !important; }
+      .link-card:hover { transform: none !important; }
+      .svg-tail,
+      .svg-eye-blink,
+      .svg-bubble-1,
+      .svg-bubble-2 {
+        animation: none !important;
+      }
+      ::view-transition-group(root),
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation: none !important;
+      }
+    }
+
+    @media (hover: none) {
+      .fav-btn {
+        opacity: 0.75;
+        width: 2.45rem;
+        height: 2.45rem;
+      }
+      .search-kbd {
+        display: none;
+      }
+    }
+
     @media (max-width: 960px) {
       .spine-track {
         left: 1.75rem;
@@ -560,15 +883,18 @@
     @media (max-width: 680px) {
       .top-bar-inner {
         flex-wrap: wrap;
-        gap: 0.65rem;
-        padding: 0.65rem 1rem;
+        gap: 0.5rem;
+        padding: 0.6rem 0.9rem;
+      }
+      .brand-wordmark {
+        font-size: 0.94rem;
       }
       .top-nav {
-        gap: 0.15rem;
-        font-size: 0.78rem;
+        gap: 0.12rem;
+        font-size: 0.74rem;
       }
       .top-nav a {
-        padding: 0.28rem 0.6rem;
+        padding: 0.25rem 0.52rem;
       }
       .top-actions {
         width: 100%;
@@ -577,16 +903,82 @@
         flex: 1;
         width: auto;
       }
+      .search-box input {
+        padding-right: 0.75rem;
+      }
+      .search-kbd {
+        display: none;
+      }
+      .page-shell,
+      .section {
+        scroll-margin-top: 6.75rem;
+      }
       .links-grid {
         grid-template-columns: 1fr;
       }
-      .reset-history-btn span {
-        display: none;
+      .finale-character-wrap {
+        width: clamp(280px, 88vw, 420px);
+      }
+    }
+
+    /* Print Stylesheet (D6) */
+    @media print {
+      .top-bar,
+      .spine-finale,
+      .fav-btn,
+      .search-box,
+      .top-actions,
+      .spine-track {
+        display: none !important;
+      }
+      .section.is-collapsed .section-content {
+        display: block !important;
+      }
+      .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 2rem !important;
+      }
+      body, .page-shell {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 0 !important;
+      }
+      .card-link {
+        text-decoration: underline !important;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Visually Hidden Valid H1 Root (A3) -->
+  <h1 class="sr-only">Toxico Course Bookmarks — Clinical Toxicology Resources</h1>
+
+  <!-- Shared SVG Icon Definitions -->
+  <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="icon-yt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="6 3 20 12 6 21 6 3"></polygon>
+      </symbol>
+      <symbol id="icon-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+      </symbol>
+      <symbol id="icon-slide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+        <line x1="8" y1="21" x2="16" y2="21"></line>
+        <line x1="12" y1="17" x2="12" y2="21"></line>
+      </symbol>
+      <symbol id="icon-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 17L17 7"></path>
+        <path d="M7 7h10v10"></path>
+      </symbol>
+      <symbol id="icon-star" viewBox="0 0 24 24">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </symbol>
+    </defs>
+  </svg>
+
   <!-- Sticky Top Bar -->
   <header class="top-bar">
     <div class="top-bar-inner">
@@ -595,7 +987,7 @@
       <nav class="top-nav" aria-label="Primary Navigation">
         <a href="#section-video" class="is-active" data-target="section-video">Lectures</a>
         <a href="#section-file" data-target="section-file">Guidelines</a>
-        <a href="#section-link" data-target="section-link">Papers &amp; Links</a>
+        <a href="#section-link" data-target="section-link">Articles</a>
       </nav>
 
       <div class="top-actions">
@@ -604,19 +996,25 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" id="search-input" placeholder="Search resources..." aria-label="Search resources">
+          <input type="search" id="search-input" placeholder="Search resources..." aria-label="Search resources" autocomplete="off">
           <span class="search-kbd" aria-hidden="true">/</span>
         </div>
 
-        <button class="btn-ghost reset-history-btn" id="reset-history-btn" title="Reset visited links history" type="button">
+        <button class="btn-ghost" id="favorites-filter-btn" title="Show only favorite items" aria-label="Filter favorites" aria-pressed="false" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <use href="#icon-star"></use>
+          </svg>
+        </button>
+
+        <button class="btn-ghost" id="reset-history-btn" title="Reset visited links history" aria-label="Reset visited links history" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
             <path d="M3 3v5h5"></path>
           </svg>
-          <span>Reset</span>
+          <span id="reset-history-label" style="display:none;font-size:0.72rem;">Confirm?</span>
         </button>
 
-        <button class="btn-ghost" id="theme-toggle" aria-label="Toggle color theme" type="button">
+        <button class="btn-ghost" id="theme-toggle" title="Toggle color theme" aria-label="Toggle color theme" type="button">
           <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
@@ -626,594 +1024,953 @@
   </header>
 
   <main class="page-shell" id="top">
-    <!-- Single Continuous Vertical Progress Line Running Behind All Content -->
     <div class="spine-track" aria-hidden="true">
       <div class="spine-fill" id="spine-fill"></div>
     </div>
 
-    <!-- SECTION 01: VIDEO LECTURE LINKS -->
-    <section id="section-video" class="section">
-      <header class="section-header">
-        <div class="section-header-top">
-          <span class="spine-kicker">SECTION 01</span>
-          <span class="section-meta" data-unit="lectures · YouTube">57 lectures · YouTube</span>
-        </div>
-        <h2 class="spine-title">Video Lecture Links</h2>
-      </header>
-
-      <div class="section-content">
-        <h3><span class="topic-index">01.1</span> Introduction &amp; General Management</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=6fJMoLbPzV0" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Introduction to Toxicology</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=vBTVgSYmksA" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Introduction toxico</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=WsRUt1tde7k" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">General Management</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=B8Ur0ZoRx6Q" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Toxicologic Emergency for R2 (1)</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=KhiWkbxAdog" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Toxicologic Emergency for R2 (2)</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=A19f-qhtCMY" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Ped tox EMTOX</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.2</span> Toxicologic Emergencies &amp; Syndromes</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=Pl6usdPiYtw" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">EMTox BB CCB Dig</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=kYLVCor3FZ4" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Met acidosis TOX</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=TnDKdfmrjEk" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Drug induced hyperthermia</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=FRDA8KQDXpE" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">SS &amp; NMS</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=Uig5VOUuU4k" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Drug interaction</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.3</span> Drugs of Abuse &amp; Psychotropic Drugs</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=bZSFAewiLNI" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Psychotropic drugs</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=ZJZjaB4Oscw" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Psychotropic</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=IEzrba9y7pg" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Substance abuse dent1 1</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=fLIQcf8sufI" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Amphetamine &amp; Substance abuse</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=P_o8oUz3wBE" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">การใช้ยาแผนปัจจุบันเพื่อการเสพติด</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=Ggc7_83WJ2s" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Hallucinogenic substance</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=bMEFGnfZ1oA" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Toxicology of Cannabis and Kratom</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=S0zCCpqrxl0" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Complications of cannabis</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=VunB5Mbchoo" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Lithium</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.4</span> Analgesics &amp; Common Medications</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=9dKfq50utGI" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Analgesic</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=7wp4JiD3k_I" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Paracetamol overdose</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=J_NOw7yAc2I" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Salicylate</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=kdDL9lgnhUU" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Local anesthetics</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.5</span> Toxic Alcohols</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=Lcz7jbBl_Lk" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Ethanol and toxic alcohols</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=hbF1orJciyQ" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Ethanol</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.6</span> Bites, Stings &amp; Marine Envenomation</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=KAsGWh1AogE" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Bite and sting</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=HzdBT4Xk61s" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Snake Bite ภาค 1</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=UWQI0-G6Lg8" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Snake Bite ภาค 2</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=K8iBSaYG7tQ" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Marine poisoning</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=hvl43rE_Rlo" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Marine envenomation</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=vET-rcWT278" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Tox in the news Concise Review Jellyfish Envenomation Tetrodotoxin Poisoning<span class="tag-new">New</span></span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.7</span> Pesticides, Herbicides &amp; Rodenticides</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=P8lsZgndFFY" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Pesticide updated</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=diA_DLktniU" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">โรคจากสารกำจัดแมลง</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=jJz69yEyzdo" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">ภาวะพิษจากสารกำจัดวัชพืช</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=4yDbbdNIO0w" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Rodenticide</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.8</span> Gases, Hydrocarbons &amp; Hazmat</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=PzLbgMaU0Cs" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Hydrocarbon and Simple asphyxia</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=7Ec9JuQhC5M" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Hydrocarbon</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=qoqZC3hg4yo" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Carbon monoxide poisoning</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=5ZJieZcsJ0k" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">CN HS 2020 Aj Pom updated</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=joqeQbMP_Zk" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">CN &amp; H2S poisoning</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=RF6JF0KOnSc" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Irritant gas</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=xQE1yEYWaC8" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Hazardous material resuscitation</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=XJnZ65YLxGM" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Completed PPE suit</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.9</span> Heavy Metals</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=UvUToXTWE-g" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Lead</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=-W3dR8HC6E4" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Arsenic</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=sDDhREtC9Is" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Iron</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.10</span> Caustic Agents &amp; Household Products</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=6J9fIalzNMw" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Caustic agent update</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=mTA7MxVtbUk" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Caustic agent</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=KssH8-zuOpU" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Household product</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.11</span> Methemoglobinemia</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=pfkTCpm1ySY" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Methemoglobinemia 2025</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=9jlea7Zj03E" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Methemoglobinemia</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=_pBAuvaXeJM" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Sausage nitrite methemoglobinemia</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">01.12</span> Plants &amp; Mushrooms</h3>
-        <div class="links-grid">
-          <a href="https://www.youtube.com/watch?v=ChhpmKKMLso" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Plants for EMtox 2021</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=kUzanOXc9fI" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Poisonous plants</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=4NoNgsBtfxQ" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Mushroom poisoning</span>
-            </div>
-          </a>
-          <a href="https://www.youtube.com/watch?v=5Ldu0ewbGgk" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-              <span class="card-content">Mushroom poisoning current evidence studies<span class="tag-new">New</span></span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 02: LOCAL FILES (PDF & HTML) -->
-    <section id="section-file" class="section">
-      <header class="section-header">
-        <div class="section-header-top">
-          <span class="spine-kicker">SECTION 02</span>
-          <span class="section-meta" data-unit="documents · PDF / HTML">4 documents · PDF / HTML</span>
-        </div>
-        <h2 class="spine-title">Files &amp; Clinical Guidelines</h2>
-      </header>
-
-      <div class="section-content">
-        <h3><span class="topic-index">02.1</span> Snakebite &amp; Antivenom Clinical Guidelines</h3>
-        <div class="links-grid">
-          <a href="pdfs/Neurotoxic%20snakebites.pdf" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-              <span class="card-content">แนวทางดูแล Neurotoxic Snakebites (ศ.พิษวิทยา รามาธิบดี)</span>
-            </div>
-          </a>
-          <a href="pdfs/วิธีให้%20Antivenom%20neurototoxin%20Snake.docx.pdf" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-              <span class="card-content">วิธีให้ Antivenom Neurotoxin Snake</span>
-            </div>
-          </a>
-          <a href="pdfs/Allergic%20reaction%20to%20antivenom_Ver%202.pdf" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-              <span class="card-content">แนวทางการรักษาภาวะแพ้เซรุ่มแก้พิษงู Allergic Reactions to Antivenom Ver.2</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">02.2</span> Interactive Presentations &amp; Slides</h3>
-        <div class="links-grid">
-          <a href="docs/ARDS_presentation.html" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-              <span class="card-content">ARDS Masterclass — Acute Respiratory Distress Syndrome<span class="tag-new">New</span></span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 03: ARTICLES, RESEARCH PAPERS & EXTERNAL WEB LINKS -->
-    <section id="section-link" class="section">
-      <header class="section-header">
-        <div class="section-header-top">
-          <span class="spine-kicker">SECTION 03</span>
-          <span class="section-meta" data-unit="references · External web">10 references · External web</span>
-        </div>
-        <h2 class="spine-title">Articles, Papers &amp; Web Links</h2>
-      </header>
-
-      <div class="section-content">
-        <h3><span class="topic-index">03.1</span> Research Papers &amp; Medical Journals</h3>
-        <div class="links-grid">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/36744989/" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Dexamethasone therapy for CO poisoning</span>
-            </div>
-          </a>
-          <a href="https://pubmed.ncbi.nlm.nih.gov/23554277/" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Neuroprotective effects of erythropoietin in CO poisoning</span>
-            </div>
-          </a>
-          <a href="https://pubmed.ncbi.nlm.nih.gov/22748972/" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Post-mortem redistribution of antipsychotic drugs</span>
-            </div>
-          </a>
-          <a href="https://www.sciencedirect.com/science/article/abs/pii/S0379073804001033" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Postmortem toxicology of drugs of abuse</span>
-            </div>
-          </a>
-          <a href="https://journals.plos.org/plosntds/article/figures?id=10.1371/journal.pntd.0002302" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Neurotoxicity in Snakebite</span>
-            </div>
-          </a>
-          <a href="https://www.researchgate.net/publication/247153915_Muscarinic_Toxicity_Among_Family_Members_After_Consumption_of_Mushrooms" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Muscarinic Toxicity</span>
-            </div>
-          </a>
-        </div>
-
-        <h3><span class="topic-index">03.2</span> Clinical Articles &amp; Reference Links</h3>
-        <div class="links-grid">
-          <a href="https://www.emdocs.net/efficacy-of-hypertonic-saline-for-tricyclic-antidepressant-overdose/" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Efficacy of Hypertonic Saline for Tricyclic Antidepressant Overdose</span>
-            </div>
-          </a>
-          <a href="https://www.epa.nsw.gov.au/Your-environment/Household-building-and-renovation/Treated-timber/timber-treatments/copper-chrome-arsenate-treated-timber" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">CCA treated timber</span>
-            </div>
-          </a>
-          <a href="https://edition.cnn.com/2024/03/21/climate/arsenic-contaminated-water-bangladesh-climate-intl/index.html" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Arsenic-contaminated water - CNN</span>
-            </div>
-          </a>
-          <a href="https://www.britannica.com/biography/Mary-Ann-Cotton" class="link-card" target="_blank" rel="noopener">
-            <div class="card-left">
-              <svg class="type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-              <span class="card-content">Mary Ann Cotton | Biography</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
+    <div id="sections-root"></div>
 
     <div class="empty-state" id="empty-state">
       <p>No resources match your search query.</p>
       <button class="btn-ghost" id="clear-search-btn" type="button">Clear search</button>
     </div>
+
+    <!-- Bottom Runway & Centered Minimalist Cat Scene -->
+    <div class="spine-finale" id="spine-finale" aria-hidden="true">
+      <div class="finale-character-wrap" id="finale-character-wrap">
+        <svg class="finale-svg" id="finale-svg" viewBox="0 0 480 208" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 1. Centered Minimalist Backdrop Halo (x=240) -->
+          <circle class="finale-halo" cx="240" cy="108" r="46"/>
+          <circle cx="240" cy="108" r="54" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 5"/>
+
+          <!-- Minimalist Four-Point Sparkles Flanking the Centerpiece -->
+          <path d="M 174 68 L 176 73 L 181 75 L 176 77 L 174 82 L 172 77 L 167 75 L 172 73 Z" fill="var(--line-strong)"/>
+          <path class="finale-target t-end" d="M 308 62 L 309.5 66 L 313.5 67.5 L 309.5 69 L 308 73 L 306.5 69 L 302.5 67.5 L 306.5 66 Z"/>
+
+          <!-- 2. Horizontal Branch Line from Left Spine Through Center (y=150) -->
+          <path id="finale-branch-track" class="finale-branch-track" d="M 24 150 H 352"/>
+          <path id="finale-branch-fill-right" class="finale-branch-fill" pathLength="1000" d="M 24 150 H 352"/>
+
+          <!-- 3. Spine Milestone Nodes (Dynamically aligned to vertical spine X) -->
+          <g id="finale-spine-nodes">
+            <circle class="finale-target t-node" cx="0" cy="44" r="6" stroke="var(--ink-primary)" stroke-width="2"/>
+            <circle class="finale-target t-cat" cx="0" cy="150" r="6" stroke="var(--ink-primary)" stroke-width="2"/>
+            <circle class="finale-target t-end" cx="0" cy="196" r="6" stroke="var(--ink-primary)" stroke-width="2"/>
+          </g>
+
+          <!-- 4. Left Prop: Minimalist Stacked Books & Botanical Leaf (x=180, y=150) -->
+          <g transform="translate(180, 150)" stroke="var(--ink-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Bottom Tome -->
+            <rect x="-24" y="-8" width="44" height="8" rx="2.5" fill="var(--bg-elevated)"/>
+            <line x1="-18" y1="-4" x2="14" y2="-4" stroke="var(--line-strong)" stroke-width="1.2"/>
+            <!-- Top Tome -->
+            <rect x="-20" y="-15" width="36" height="7" rx="2" fill="var(--bg-subtle)"/>
+            <!-- Bookmark Ribbon -->
+            <path class="finale-target t-cat" d="M -8 -15 V -5 L -5 -7 L -2 -5 V -15 Z" stroke-width="1.2"/>
+            <!-- Minimalist Botanical Sprig -->
+            <path d="M -4 -15 C -2 -22, 4 -25, 10 -26" fill="none" stroke-width="1.5"/>
+            <path class="finale-target t-cat" d="M 0 -20 C -5 -22, -6 -27, -1 -27 C 2 -27, 2 -22, 0 -20 Z" stroke-width="1.3"/>
+            <path class="finale-target t-cat" d="M 6 -24 C 8 -28, 13 -28, 12 -24 C 11 -21, 7 -22, 6 -24 Z" stroke-width="1.3"/>
+          </g>
+
+          <!-- 5. Centerpiece: Sleek Minimalist Sitting Cat (x=240, y=150) -->
+          <g transform="translate(240, 150)" stroke="var(--ink-primary)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+            <!-- Graceful S-Curve Animated Tail -->
+            <g transform="translate(-18, -4)">
+              <path class="svg-tail" d="M 0 2 C -16 2, -24 -10, -19 -22 C -15 -31, -22 -38, -28 -35" fill="none" stroke-width="4.2"/>
+            </g>
+
+            <!-- Sculpted Feline Body Silhouette -->
+            <path d="M -20 0 C -21 -18, -16 -34, -8 -40 C -3 -43, 3 -43, 8 -40 C 16 -34, 21 -18, 20 0 Z" fill="var(--bg-elevated)"/>
+
+            <!-- Subtle Chest Curve & Front Paws -->
+            <path d="M -7 0 V -14 M 7 0 V -14" stroke-width="1.6"/>
+            <ellipse cx="-4" cy="-2" rx="4.2" ry="2.2" fill="var(--bg-elevated)" stroke-width="1.6"/>
+            <ellipse cx="4" cy="-2" rx="4.2" ry="2.2" fill="var(--bg-elevated)" stroke-width="1.6"/>
+
+            <!-- Sculpted Head with Integrated Ears -->
+            <path d="M -15 -49 L -17 -69 L -5 -60 C -2 -61, 2 -61, 5 -60 L 17 -69 L 15 -49 C 17 -43, 14 -35, 0 -35 C -14 -35, -17 -43, -15 -49 Z" fill="var(--bg-elevated)"/>
+
+            <!-- Minimal Inner Ear Triangles -->
+            <polygon class="finale-target t-cat" points="-12,-53 -13.5,-63 -6.5,-57" stroke-width="1.2"/>
+            <polygon class="finale-target t-cat" points="12,-53 13.5,-63 6.5,-57" stroke-width="1.2"/>
+
+            <!-- Calm Expressive Eyes (Blink Animated) -->
+            <g class="svg-eye-blink" stroke="none" fill="var(--ink-primary)">
+              <circle cx="-5.8" cy="-48" r="1.9"/>
+              <circle cx="5.8" cy="-48" r="1.9"/>
+            </g>
+
+            <!-- Minimal Nose & Gentle Mouth Curve -->
+            <polygon points="-1.8,-44 1.8,-44 0,-42" fill="var(--ink-primary)" stroke="none"/>
+            <path d="M -2.5 -40.5 Q 0 -39 2.5 -40.5" fill="none" stroke-width="1.3"/>
+
+            <!-- Delicate Symmetrical Whiskers -->
+            <line x1="-12" y1="-46" x2="-21" y2="-48" stroke-width="1.2"/>
+            <line x1="-12" y1="-43" x2="-20" y2="-43" stroke-width="1.2"/>
+            <line x1="12" y1="-46" x2="21" y2="-48" stroke-width="1.2"/>
+            <line x1="12" y1="-43" x2="20" y2="-43" stroke-width="1.2"/>
+
+            <!-- Collar Band & Scroll-Reactive Medallion -->
+            <path d="M -9.5 -36.5 Q 0 -33.5 9.5 -36.5" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+            <circle class="finale-target t-cat" cx="0" cy="-32.5" r="3.4" stroke-width="1.6"/>
+          </g>
+
+          <!-- 6. Right Prop: Minimalist Erlenmeyer Flask & Yarn Orb (x=298, y=150) -->
+          <g transform="translate(298, 150)">
+            <!-- Floating Effervescent Bubbles -->
+            <circle class="svg-bubble-1 finale-target t-end" cx="-1" cy="-34" r="2.2" stroke="var(--ink-primary)" stroke-width="1.3"/>
+            <circle class="svg-bubble-2" cx="3" cy="-42" r="1.5" fill="var(--accent)"/>
+
+            <!-- Clean Monoline Erlenmeyer Flask -->
+            <path d="M -5 -27 H 5 M -3.2 -27 V -19 L -13 -3.2 C -14.2 -1.2, -12.8 0, -10.2 0 H 10.2 C 12.8 0, 14.2 -1.2, 13 -3.2 L 3.2 -19 V -27" fill="var(--bg-elevated)" stroke="var(--ink-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- Scroll-Reactive Antivenom Liquid Fill -->
+            <path class="finale-target t-end" d="M -7.4 -10.5 H 7.4 L 11 -3.4 C 11.6 -2.2, 10.8 -1.6, 9.2 -1.6 H -9.2 C -10.8 -1.6, -11.6 -2.2, -11 -3.4 Z" stroke="var(--ink-primary)" stroke-width="1.4" stroke-linejoin="round"/>
+
+            <!-- Minimal Measurement Ticks -->
+            <line x1="2" y1="-15" x2="4.8" y2="-15" stroke="var(--ink-primary)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="3.5" y1="-11" x2="6" y2="-11" stroke="var(--ink-primary)" stroke-width="1.2" stroke-linecap="round"/>
+          </g>
+
+          <!-- 7. Terminal Playful Orb at Branch End (x=342, y=142) -->
+          <g transform="translate(342, 142)">
+            <circle class="finale-target t-end" cx="0" cy="0" r="8" stroke="var(--ink-primary)" stroke-width="2"/>
+            <path d="M -5 -4 Q 0 -1 5 -4 M -6 2 Q 0 -2 6 2" fill="none" stroke="var(--ink-primary)" stroke-width="1.3" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+    </div>
   </main>
 
   <script>
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-    const htmlElem = document.documentElement;
+    // Maximum age in days for newly added indicator (D3)
+    const NEW_DAYS = 30;
 
-    const sunIcon = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-    const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    // 1. Data-First Resource Catalog
+    const SECTIONS_DATA = [
+      {
+        id: 'section-video',
+        kicker: 'SECTION 01',
+        title: 'Video Lecture Links',
+        unit: 'lectures · YouTube',
+        defaultIcon: 'icon-yt',
+        groups: [
+          {
+            index: '01.1',
+            title: 'Introduction & General Management',
+            items: [
+              { title: 'Introduction to Toxicology', href: 'https://www.youtube.com/watch?v=6fJMoLbPzV0' },
+              { title: 'Introduction toxico', href: 'https://www.youtube.com/watch?v=vBTVgSYmksA' },
+              { title: 'General Management', href: 'https://www.youtube.com/watch?v=WsRUt1tde7k' },
+              { title: 'Toxicologic Emergency for R2 (1)', href: 'https://www.youtube.com/watch?v=B8Ur0ZoRx6Q' },
+              { title: 'Toxicologic Emergency for R2 (2)', href: 'https://www.youtube.com/watch?v=KhiWkbxAdog' },
+              { title: 'Ped tox EMTOX', href: 'https://www.youtube.com/watch?v=A19f-qhtCMY' }
+            ]
+          },
+          {
+            index: '01.2',
+            title: 'Toxicologic Emergencies & Syndromes',
+            items: [
+              { title: 'EMTox BB CCB Dig', href: 'https://www.youtube.com/watch?v=Pl6usdPiYtw' },
+              { title: 'Met acidosis TOX', href: 'https://www.youtube.com/watch?v=kYLVCor3FZ4' },
+              { title: 'Drug induced hyperthermia', href: 'https://www.youtube.com/watch?v=TnDKdfmrjEk' },
+              { title: 'SS & NMS', href: 'https://www.youtube.com/watch?v=FRDA8KQDXpE' },
+              { title: 'Drug interaction', href: 'https://www.youtube.com/watch?v=Uig5VOUuU4k' }
+            ]
+          },
+          {
+            index: '01.3',
+            title: 'Drugs of Abuse & Psychotropic Drugs',
+            items: [
+              { title: 'Psychotropic drugs', href: 'https://www.youtube.com/watch?v=bZSFAewiLNI' },
+              { title: 'Psychotropic', href: 'https://www.youtube.com/watch?v=ZJZjaB4Oscw' },
+              { title: 'Substance abuse dent1 1', href: 'https://www.youtube.com/watch?v=IEzrba9y7pg' },
+              { title: 'Amphetamine & Substance abuse', href: 'https://www.youtube.com/watch?v=fLIQcf8sufI' },
+              { title: 'การใช้ยาแผนปัจจุบันเพื่อการเสพติด', href: 'https://www.youtube.com/watch?v=P_o8oUz3wBE' },
+              { title: 'Hallucinogenic substance', href: 'https://www.youtube.com/watch?v=Ggc7_83WJ2s' },
+              { title: 'Toxicology of Cannabis and Kratom', href: 'https://www.youtube.com/watch?v=bMEFGnfZ1oA' },
+              { title: 'Complications of cannabis', href: 'https://www.youtube.com/watch?v=S0zCCpqrxl0' },
+              { title: 'Lithium', href: 'https://www.youtube.com/watch?v=VunB5Mbchoo' }
+            ]
+          },
+          {
+            index: '01.4',
+            title: 'Analgesics & Common Medications',
+            items: [
+              { title: 'Analgesic', href: 'https://www.youtube.com/watch?v=9dKfq50utGI' },
+              { title: 'Paracetamol overdose', href: 'https://www.youtube.com/watch?v=7wp4JiD3k_I' },
+              { title: 'Salicylate', href: 'https://www.youtube.com/watch?v=J_NOw7yAc2I' },
+              { title: 'Local anesthetics', href: 'https://www.youtube.com/watch?v=kdDL9lgnhUU' }
+            ]
+          },
+          {
+            index: '01.5',
+            title: 'Toxic Alcohols',
+            items: [
+              { title: 'Ethanol and toxic alcohols', href: 'https://www.youtube.com/watch?v=Lcz7jbBl_Lk' },
+              { title: 'Ethanol', href: 'https://www.youtube.com/watch?v=hbF1orJciyQ' }
+            ]
+          },
+          {
+            index: '01.6',
+            title: 'Bites, Stings & Marine Envenomation',
+            items: [
+              { title: 'Bite and sting', href: 'https://www.youtube.com/watch?v=KAsGWh1AogE' },
+              { title: 'Snake Bite ภาค 1', href: 'https://www.youtube.com/watch?v=HzdBT4Xk61s' },
+              { title: 'Snake Bite ภาค 2', href: 'https://www.youtube.com/watch?v=UWQI0-G6Lg8' },
+              { title: 'Marine poisoning', href: 'https://www.youtube.com/watch?v=K8iBSaYG7tQ' },
+              { title: 'Marine envenomation', href: 'https://www.youtube.com/watch?v=hvl43rE_Rlo' },
+              { title: 'Tox in the news Concise Review Jellyfish Envenomation Tetrodotoxin Poisoning', href: 'https://www.youtube.com/watch?v=vET-rcWT278', added: '2026-10-22' }
+            ]
+          },
+          {
+            index: '01.7',
+            title: 'Pesticides, Herbicides & Rodenticides',
+            items: [
+              { title: 'Pesticide updated', href: 'https://www.youtube.com/watch?v=P8lsZgndFFY' },
+              { title: 'โรคจากสารกำจัดแมลง', href: 'https://www.youtube.com/watch?v=diA_DLktniU' },
+              { title: 'ภาวะพิษจากสารกำจัดวัชพืช', href: 'https://www.youtube.com/watch?v=jJz69yEyzdo' },
+              { title: 'Rodenticide', href: 'https://www.youtube.com/watch?v=4yDbbdNIO0w' }
+            ]
+          },
+          {
+            index: '01.8',
+            title: 'Gases, Hydrocarbons & Hazmat',
+            items: [
+              { title: 'Hydrocarbon and Simple asphyxia', href: 'https://www.youtube.com/watch?v=PzLbgMaU0Cs' },
+              { title: 'Hydrocarbon', href: 'https://www.youtube.com/watch?v=7Ec9JuQhC5M' },
+              { title: 'Carbon monoxide poisoning', href: 'https://www.youtube.com/watch?v=qoqZC3hg4yo' },
+              { title: 'CN HS 2020 Aj Pom updated', href: 'https://www.youtube.com/watch?v=5ZJieZcsJ0k' },
+              { title: 'CN & H2S poisoning', href: 'https://www.youtube.com/watch?v=joqeQbMP_Zk' },
+              { title: 'Irritant gas', href: 'https://www.youtube.com/watch?v=RF6JF0KOnSc' },
+              { title: 'Hazardous material resuscitation', href: 'https://www.youtube.com/watch?v=xQE1yEYWaC8' },
+              { title: 'Completed PPE suit', href: 'https://www.youtube.com/watch?v=XJnZ65YLxGM' }
+            ]
+          },
+          {
+            index: '01.9',
+            title: 'Heavy Metals',
+            items: [
+              { title: 'Lead', href: 'https://www.youtube.com/watch?v=UvUToXTWE-g' },
+              { title: 'Arsenic', href: 'https://www.youtube.com/watch?v=-W3dR8HC6E4' },
+              { title: 'Iron', href: 'https://www.youtube.com/watch?v=sDDhREtC9Is' }
+            ]
+          },
+          {
+            index: '01.10',
+            title: 'Caustic Agents & Household Products',
+            items: [
+              { title: 'Caustic agent update', href: 'https://www.youtube.com/watch?v=6J9fIalzNMw' },
+              { title: 'Caustic agent', href: 'https://www.youtube.com/watch?v=mTA7MxVtbUk' },
+              { title: 'Household product', href: 'https://www.youtube.com/watch?v=KssH8-zuOpU' }
+            ]
+          },
+          {
+            index: '01.11',
+            title: 'Methemoglobinemia',
+            items: [
+              { title: 'Methemoglobinemia 2025', href: 'https://www.youtube.com/watch?v=pfkTCpm1ySY' },
+              { title: 'Methemoglobinemia', href: 'https://www.youtube.com/watch?v=9jlea7Zj03E' },
+              { title: 'Sausage nitrite methemoglobinemia', href: 'https://www.youtube.com/watch?v=_pBAuvaXeJM' }
+            ]
+          },
+          {
+            index: '01.12',
+            title: 'Plants & Mushrooms',
+            items: [
+              { title: 'Plants for EMtox 2021', href: 'https://www.youtube.com/watch?v=ChhpmKKMLso' },
+              { title: 'Poisonous plants', href: 'https://www.youtube.com/watch?v=kUzanOXc9fI' },
+              { title: 'Mushroom poisoning', href: 'https://www.youtube.com/watch?v=4NoNgsBtfxQ' },
+              { title: 'Mushroom poisoning current evidence studies', href: 'https://www.youtube.com/watch?v=5Ldu0ewbGgk', added: '2026-10-22' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'section-file',
+        kicker: 'SECTION 02',
+        title: 'Files & Clinical Guidelines',
+        unit: 'documents · PDF / HTML',
+        defaultIcon: 'icon-doc',
+        groups: [
+          {
+            index: '02.1',
+            title: 'Snakebite, Antivenom & Overdose Clinical Guidelines',
+            items: [
+              { title: 'แนวทางดูแล Neurotoxic Snakebites (ศ.พิษวิทยา รามาธิบดี)', href: 'pdfs/Neurotoxic snakebites.pdf' },
+              { title: 'วิธีให้ Antivenom Neurotoxin Snake', href: 'pdfs/วิธีให้ Antivenom neurotoxin Snake.pdf' },
+              { title: 'แนวทางการรักษาภาวะแพ้เซรุ่มแก้พิษงู Allergic Reactions to Antivenom Ver.2', href: 'pdfs/Allergic reaction to antivenom_Ver 2.pdf' },
+              { title: 'Treatment of Calcium Channel Blocker (CCB) Overdoses (ศ.พิษวิทยา รามาธิบดี)', href: 'pdfs/Rx_Ca_Channel_Blocker.pdf', added: '2026-10-22' }
+            ]
+          },
+          {
+            index: '02.2',
+            title: 'Interactive Presentations & Slides',
+            items: [
+              { title: 'ARDS Masterclass — Acute Respiratory Distress Syndrome', href: 'docs/ARDS_presentation.html', icon: 'icon-slide', added: '2026-10-22' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'section-link',
+        kicker: 'SECTION 03',
+        title: 'Articles, Papers & Web Links',
+        unit: 'references · External web',
+        defaultIcon: 'icon-ext',
+        groups: [
+          {
+            index: '03.1',
+            title: 'Research Papers & Medical Journals',
+            items: [
+              { title: 'Dexamethasone therapy for CO poisoning', href: 'https://pubmed.ncbi.nlm.nih.gov/36744989/' },
+              { title: 'Neuroprotective effects of erythropoietin in CO poisoning', href: 'https://pubmed.ncbi.nlm.nih.gov/23554277/' },
+              { title: 'Post-mortem redistribution of antipsychotic drugs', href: 'https://pubmed.ncbi.nlm.nih.gov/22748972/' },
+              { title: 'Postmortem toxicology of drugs of abuse', href: 'https://www.sciencedirect.com/science/article/abs/pii/S0379073804001033' },
+              { title: 'Neurotoxicity in Snakebite', href: 'https://journals.plos.org/plosntds/article?id=10.1371/journal.pntd.0002302' },
+              { title: 'Muscarinic Toxicity', href: 'https://www.researchgate.net/publication/247153915_Muscarinic_Toxicity_Among_Family_Members_After_Consumption_of_Mushrooms' }
+            ]
+          },
+          {
+            index: '03.2',
+            title: 'Clinical Articles & Reference Links',
+            items: [
+              { title: 'Efficacy of Hypertonic Saline for Tricyclic Antidepressant Overdose', href: 'https://www.emdocs.net/efficacy-of-hypertonic-saline-for-tricyclic-antidepressant-overdose/' },
+              { title: 'CCA treated timber', href: 'https://www.epa.nsw.gov.au/Your-environment/Household-building-and-renovation/Treated-timber/timber-treatments/copper-chrome-arsenate-treated-timber' },
+              { title: 'Arsenic-contaminated water - CNN', href: 'https://edition.cnn.com/2024/03/21/climate/arsenic-contaminated-water-bangladesh-climate-intl/index.html' },
+              { title: 'Mary Ann Cotton — Victorian Arsenic Poisoning Case (Britannica)', href: 'https://www.britannica.com/biography/Mary-Ann-Cotton' }
+            ]
+          }
+        ]
+      }
+    ];
 
-    function setTheme(theme) {
-      const resolved = theme === 'dark' ? 'dark' : 'light';
-      htmlElem.setAttribute('data-theme', resolved);
-      themeIcon.innerHTML = resolved === 'dark' ? sunIcon : moonIcon;
+    // 2. LocalStorage Helpers (Backward-Compatible & Collision-Safe)
+    function legacyNormalizeKey(rawUrl) {
+      if (typeof rawUrl !== 'string') return '';
+      const stripped = rawUrl.replace(/^https?:\/\/[^/]+\//, '').replace(/^\//, '');
       try {
-        localStorage.setItem('toxico_theme', resolved);
+        return decodeURI(stripped);
+      } catch (_) {
+        return stripped;
+      }
+    }
+
+    function normalizeKey(rawUrl) {
+      if (typeof rawUrl !== 'string') return '';
+      const trimmed = rawUrl.trim().replace(/^\//, '');
+      try {
+        return decodeURI(trimmed);
+      } catch (_) {
+        return trimmed;
+      }
+    }
+
+    // Map legacy stripped keys (e.g. "watch?v=...") to canonical keys on load (D4)
+    const legacyToCanonicalMap = new Map();
+    SECTIONS_DATA.forEach(sec => {
+      sec.groups.forEach(group => {
+        group.items.forEach(item => {
+          const canonical = item.id || normalizeKey(item.href);
+          const legacy = legacyNormalizeKey(item.href);
+          legacyToCanonicalMap.set(legacy, canonical);
+          legacyToCanonicalMap.set(canonical, canonical);
+          if (item.href) {
+            legacyToCanonicalMap.set(normalizeKey(item.href), canonical);
+            legacyToCanonicalMap.set(encodeURI(item.href), canonical);
+          }
+        });
+      });
+    });
+
+    // Explicit backward compatibility aliases for renamed resources
+    const thaiPdfCanonical = 'pdfs/วิธีให้ Antivenom neurotoxin Snake.pdf';
+    legacyToCanonicalMap.set('pdfs/วิธีให้ Antivenom neurototoxin Snake.docx.pdf', thaiPdfCanonical);
+    legacyToCanonicalMap.set('pdfs/วิธีให้%20Antivenom%20neurototoxin%20Snake.docx.pdf', thaiPdfCanonical);
+    const plosNew = normalizeKey('https://journals.plos.org/plosntds/article?id=10.1371/journal.pntd.0002302');
+    legacyToCanonicalMap.set('https://journals.plos.org/plosntds/article/figures?id=10.1371/journal.pntd.0002302', plosNew);
+    legacyToCanonicalMap.set('plosntds/article/figures?id=10.1371/journal.pntd.0002302', plosNew);
+
+    function loadStoredSet(storageKey) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        if (Array.isArray(parsed)) {
+          return new Set(
+            parsed
+              .map(val => legacyToCanonicalMap.get(val) || legacyToCanonicalMap.get(legacyNormalizeKey(val)) || normalizeKey(val))
+              .filter(Boolean)
+          );
+        }
+      } catch (_) {}
+      return new Set();
+    }
+
+    function saveStoredSet(storageKey, set) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(Array.from(set)));
       } catch (_) {}
     }
 
-    try {
-      const savedTheme = localStorage.getItem('toxico_theme');
-      if (savedTheme === 'dark' || savedTheme === 'light') {
-        setTheme(savedTheme);
+    const favoriteHrefs = loadStoredSet('toxico_favorites');
+    const visitedHrefs = loadStoredSet('toxico_visited');
+    const collapsedSectionIds = loadStoredSet('toxico_collapsed');
+    let onlyFavorites = false;
+    let navPinnedSectionId = '';
+    let navTargetScrollY = null;
+    let navPinTimer = null;
+
+    // Motion preference detection (C1)
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function getScrollBehavior() {
+      return motionQuery.matches ? 'auto' : 'smooth';
+    }
+
+    // 3. Theme Management (B1, B2)
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const htmlElem = document.documentElement;
+    const metaThemeColor = document.getElementById('meta-theme-color');
+    const sunIcon = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+    const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+
+    function setTheme(theme, persist) {
+      const resolved = theme === 'dark' ? 'dark' : 'light';
+      htmlElem.setAttribute('data-theme', resolved);
+      if (themeIcon) themeIcon.innerHTML = resolved === 'dark' ? sunIcon : moonIcon;
+      if (metaThemeColor) metaThemeColor.setAttribute('content', resolved === 'dark' ? '#0B0B0A' : '#F3F1EC');
+      if (persist) {
+        try {
+          localStorage.setItem('toxico_theme', resolved);
+        } catch (_) {}
       }
-    } catch (_) {}
+    }
+
+    // Sync button icon with dataset initialized before paint
+    setTheme(htmlElem.getAttribute('data-theme') || 'light', false);
 
     themeToggle.addEventListener('click', () => {
-      const nextTheme = htmlElem.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      setTheme(nextTheme);
+      const next = htmlElem.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+
+      if (motionQuery.matches) {
+        setTheme(next, true);
+      } else if (typeof document.startViewTransition === 'function') {
+        try {
+          document.startViewTransition(() => setTheme(next, true));
+        } catch (_) {
+          setTheme(next, true);
+        }
+      } else {
+        htmlElem.classList.add('theme-switching');
+        setTheme(next, true);
+        setTimeout(() => htmlElem.classList.remove('theme-switching'), 350);
+      }
     });
 
+    // 4. Render DOM from Data (A1, A2, A3, D3, D4)
+    const sectionsRoot = document.getElementById('sections-root');
+
+    function escapeHtml(str) {
+      return (str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Helper: Wrap Thai script matches in lang="th" (A3)
+    function renderWithLang(text) {
+      const hasThai = /[\u0E00-\u0E7F]/.test(text);
+      const escaped = escapeHtml(text);
+      return hasThai ? `<span lang="th">${escaped}</span>` : escaped;
+    }
+
+    // Helper: Check if added date is within NEW_DAYS (D3)
+    function isItemNew(addedDateStr) {
+      if (!addedDateStr) return false;
+      const addedTime = new Date(addedDateStr).getTime();
+      if (isNaN(addedTime)) return false;
+      const diffDays = (Date.now() - addedTime) / (1000 * 60 * 60 * 24);
+      return diffDays >= 0 && diffDays <= NEW_DAYS;
+    }
+
+    sectionsRoot.innerHTML = SECTIONS_DATA.map(sec => {
+      const contentId = `${sec.id}-content`;
+      const groupsHtml = sec.groups.map(group => {
+        const cardsHtml = group.items.map(item => {
+          const iconId = item.icon || sec.defaultIcon;
+          const key = item.id || normalizeKey(item.href);
+          const isFav = favoriteHrefs.has(key);
+          const isVisited = visitedHrefs.has(key);
+          const favLabel = isFav ? 'Remove from favorites' : 'Add to favorites';
+          const isNew = isItemNew(item.added);
+          const rawHref = item.href || '';
+          const renderedHref = encodeURI(rawHref);
+
+          return `
+            <div class="link-card${isVisited ? ' visited' : ''}" data-key="${escapeHtml(key)}" data-search="${escapeHtml(item.title.toLowerCase())}">
+              <a class="card-link" href="${escapeHtml(renderedHref)}" target="_blank" rel="noopener noreferrer">
+                <div class="card-left">
+                  <svg class="card-icon" aria-hidden="true"><use href="#${iconId}"></use></svg>
+                  <span class="card-content">${renderWithLang(item.title)}${isNew ? '<span class="tag-new">New</span>' : ''}${isVisited ? '<span class="tag-visited">Visited</span>' : ''}</span>
+                </div>
+              </a>
+              <button type="button" class="fav-btn${isFav ? ' is-favorite' : ''}" aria-label="${favLabel}" title="${favLabel}" aria-pressed="${isFav ? 'true' : 'false'}">
+                <svg aria-hidden="true"><use href="#icon-star"></use></svg>
+              </button>
+            </div>`;
+        }).join('');
+
+        return `
+          <h3 data-search="${escapeHtml(`${group.index} ${group.title}`.toLowerCase())}"><span class="topic-index">${escapeHtml(group.index)}</span> ${renderWithLang(group.title)}</h3>
+          <div class="links-grid">${cardsHtml}</div>`;
+      }).join('');
+
+      return `
+        <section id="${sec.id}" class="section">
+          <header class="section-header" title="Toggle section">
+            <div class="section-header-top">
+              <span class="spine-kicker">${escapeHtml(sec.kicker)}</span>
+              <span class="section-meta" data-unit="${escapeHtml(sec.unit)}"></span>
+            </div>
+            <h2 class="spine-title">
+              <button type="button" class="section-toggle" aria-expanded="true" aria-controls="${contentId}">
+                ${renderWithLang(sec.title)}
+              </button>
+            </h2>
+          </header>
+          <div class="section-content" id="${contentId}">${groupsHtml}</div>
+        </section>`;
+    }).join('');
+
+    // 5. Cache DOM Descriptors Once
+    const topBar = document.querySelector('.top-bar');
+    const pageShell = document.getElementById('top');
+    const brandLink = document.querySelector('.brand-wordmark');
     const searchInput = document.getElementById('search-input');
     const clearSearchBtn = document.getElementById('clear-search-btn');
+    const favoritesFilterBtn = document.getElementById('favorites-filter-btn');
+    const resetHistoryBtn = document.getElementById('reset-history-btn');
+    const resetHistoryLabel = document.getElementById('reset-history-label');
     const emptyState = document.getElementById('empty-state');
+    const emptyStateText = emptyState.querySelector('p');
+    const spineTrack = document.querySelector('.spine-track');
     const spineFill = document.getElementById('spine-fill');
-    const linkGrids = document.querySelectorAll('.links-grid');
-    const sections = document.querySelectorAll('.section');
-    const allHeadings = document.querySelectorAll('.section-content h3');
-    const navLinks = document.querySelectorAll('.top-nav a');
-    const pageShell = document.querySelector('.page-shell');
-    const linkCards = document.querySelectorAll('a.link-card');
+    const spineFinale = document.getElementById('spine-finale');
+    const finaleWrap = document.getElementById('finale-character-wrap');
+    const finaleSvg = document.getElementById('finale-svg');
+    const finaleBranchTrack = document.getElementById('finale-branch-track');
+    const finaleBranchRight = document.getElementById('finale-branch-fill-right');
+    const finaleSpineNodes = document.getElementById('finale-spine-nodes');
+    const navLinks = Array.from(document.querySelectorAll('.top-nav a'));
+    const allHeadings = Array.from(document.querySelectorAll('.section-content h3'));
+    const linkCards = Array.from(document.querySelectorAll('.link-card'));
 
-    // Cache clean searchable text per card (before runtime .tag-visited injection)
-    linkCards.forEach(card => {
-      const contentEl = card.querySelector('.card-content') || card;
-      card.dataset.searchText = contentEl.textContent.toLowerCase().trim();
+    const HEADER_OFFSET_GAP = 20;
+    const TAIL_SCROLL_RUNWAY = 180;
+    const SVG_VIEWBOX_WIDTH = 480;
+    const SVG_VIEWBOX_HEIGHT = 208;
+    const BRANCH_END_X = 352;
+    let tailStartScrollY = 0;
+
+    function getTopBarOffset() {
+      const barHeight = topBar ? topBar.getBoundingClientRect().height : 56;
+      return Math.round(barHeight + HEADER_OFFSET_GAP);
+    }
+
+    function syncFinaleSpineAlignment() {
+      if (!spineTrack || !spineFinale || !finaleSvg || spineFinale.style.display === 'none') return;
+      const trackRect = spineTrack.getBoundingClientRect();
+      const svgRect = finaleSvg.getBoundingClientRect();
+      if (!svgRect.width) return;
+
+      const spineCenterPx = trackRect.left + trackRect.width * 0.5;
+      const scaleX = SVG_VIEWBOX_WIDTH / svgRect.width;
+      const spineSvgX = Math.round((spineCenterPx - svgRect.left) * scaleX * 10) / 10;
+
+      if (finaleSpineNodes) {
+        finaleSpineNodes.setAttribute('transform', `translate(${spineSvgX}, 0)`);
+      }
+      const branchPath = `M ${spineSvgX} 150 H ${BRANCH_END_X}`;
+      if (finaleBranchTrack) finaleBranchTrack.setAttribute('d', branchPath);
+      if (finaleBranchRight) finaleBranchRight.setAttribute('d', branchPath);
+    }
+
+    const sectionRecords = Array.from(document.querySelectorAll('.section')).map(el => ({
+      id: el.id,
+      el,
+      header: el.querySelector('.section-header'),
+      toggleBtn: el.querySelector('.section-toggle'),
+      kicker: el.querySelector('.spine-kicker'),
+      title: el.querySelector('.spine-title'),
+      meta: el.querySelector('.section-meta'),
+      groups: Array.from(el.querySelectorAll('.links-grid')).map(grid => ({
+        grid,
+        heading: grid.previousElementSibling,
+        cards: Array.from(grid.querySelectorAll('.link-card'))
+      })),
+      allCards: Array.from(el.querySelectorAll('.link-card'))
+    }));
+
+    function updateBottomRunway() {
+      if (!pageShell || !spineFinale) return;
+      const targetOffset = getTopBarOffset();
+      const visibleRecords = sectionRecords.filter(r => r.el.style.display !== 'none');
+
+      if (visibleRecords.length === 0) {
+        spineFinale.style.display = 'none';
+        tailStartScrollY = 0;
+        if (spineTrack) spineTrack.style.bottom = '0px';
+        return;
+      }
+
+      spineFinale.style.display = 'flex';
+      syncFinaleSpineAlignment();
+
+      const lastRecord = visibleRecords[visibleRecords.length - 1];
+      const lastHeaderEl = lastRecord.header || lastRecord.el;
+      const lastHeaderRect = lastHeaderEl.getBoundingClientRect();
+      const lastHeaderDocTop = window.scrollY + lastHeaderRect.top;
+      const anchorViewportY = targetOffset + (lastHeaderRect.height || 68);
+
+      const visibleH3s = allHeadings.filter(h3 => h3.style.display !== 'none' && h3.offsetParent !== null);
+      const lastSubheading = visibleH3s.length > 0 ? visibleH3s[visibleH3s.length - 1] : null;
+      const lastSubDocTop = lastSubheading
+        ? window.scrollY + lastSubheading.getBoundingClientRect().top
+        : lastHeaderDocTop;
+
+      const lastHeaderTargetScrollY = Math.max(0, lastHeaderDocTop - targetOffset);
+      const lastSubTargetScrollY = lastSubheading
+        ? Math.max(lastHeaderTargetScrollY, lastSubDocTop - anchorViewportY + 28)
+        : lastHeaderTargetScrollY;
+
+      tailStartScrollY = lastSubTargetScrollY;
+      const requiredMaxScroll = tailStartScrollY + TAIL_SCROLL_RUNWAY;
+      const requiredDocHeight = requiredMaxScroll + window.innerHeight;
+
+      const contentBottomDocY = window.scrollY + sectionsRoot.getBoundingClientRect().bottom;
+      const finaleMarginTop = parseFloat(window.getComputedStyle(spineFinale).marginTop) || 52;
+      const svgRenderedHeight = finaleSvg ? finaleSvg.getBoundingClientRect().height + 24 : 220;
+      const neededFinaleHeight = Math.max(
+        Math.ceil(svgRenderedHeight),
+        Math.ceil(requiredDocHeight - contentBottomDocY - finaleMarginTop)
+      );
+
+      spineFinale.style.minHeight = `${neededFinaleHeight}px`;
+
+      const svgH = finaleSvg.getBoundingClientRect().height;
+      const capY = (202 / SVG_VIEWBOX_HEIGHT) * svgH;   // y=196 + radius 6
+      if (spineTrack) {
+        spineTrack.style.bottom = `${Math.max(0, spineFinale.offsetHeight - capY)}px`;
+      }
+    }
+
+    // 6. Collapse State & Navigation (A2, C5, D2)
+    function setSectionCollapsed(record, isCollapsed) {
+      record.el.classList.toggle('is-collapsed', isCollapsed);
+      if (record.toggleBtn) {
+        record.toggleBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+      }
+    }
+
+    function clearNavPin() {
+      navPinnedSectionId = '';
+      navTargetScrollY = null;
+      if (navPinTimer) {
+        clearTimeout(navPinTimer);
+        navPinTimer = null;
+      }
+    }
+
+    sectionRecords.forEach(record => {
+      if (!record.header) return;
+
+      const toggleSection = () => {
+        const nextCollapsed = !record.el.classList.contains('is-collapsed');
+        setSectionCollapsed(record, nextCollapsed);
+        if (nextCollapsed) {
+          collapsedSectionIds.add(record.id);
+        } else {
+          collapsedSectionIds.delete(record.id);
+        }
+        saveStoredSet('toxico_collapsed', collapsedSectionIds);
+        updateBottomRunway();
+        scheduleScrollUpdate();
+      };
+
+      record.header.addEventListener('click', toggleSection);
+    });
+
+    if (brandLink) {
+      brandLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const firstVisible = sectionRecords.find(r => r.el.style.display !== 'none');
+        navPinnedSectionId = firstVisible ? firstVisible.id : '';
+        navTargetScrollY = 0;
+        if (navPinTimer) clearTimeout(navPinTimer);
+        navPinTimer = setTimeout(() => {
+          clearNavPin();
+          scheduleScrollUpdate();
+        }, 1500);
+
+        history.replaceState(null, '', '#top');
+        window.scrollTo({ top: 0, behavior: getScrollBehavior() });
+        scheduleScrollUpdate();
+      });
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('data-target');
+        const targetRecord = sectionRecords.find(r => r.id === targetId);
+        if (!targetRecord) return;
+
+        // Reset filter if target is hidden so navigation always works
+        if (targetRecord.el.style.display === 'none' && (searchInput.value || onlyFavorites)) {
+          searchInput.value = '';
+          onlyFavorites = false;
+          favoritesFilterBtn.classList.remove('is-active');
+          favoritesFilterBtn.setAttribute('aria-pressed', 'false');
+          applyFilters();
+        }
+
+        if (targetRecord.el.classList.contains('is-collapsed')) {
+          setSectionCollapsed(targetRecord, false);
+          collapsedSectionIds.delete(targetRecord.id);
+          saveStoredSet('toxico_collapsed', collapsedSectionIds);
+        }
+
+        updateBottomRunway();
+
+        const targetOffset = getTopBarOffset();
+        const headerEl = targetRecord.header || targetRecord.el;
+        const headerRect = headerEl.getBoundingClientRect();
+        const targetScrollY = Math.max(0, Math.round(window.scrollY + headerRect.top - targetOffset));
+
+        navPinnedSectionId = targetRecord.id;
+        navTargetScrollY = targetScrollY;
+        if (navPinTimer) clearTimeout(navPinTimer);
+        navPinTimer = setTimeout(() => {
+          clearNavPin();
+          scheduleScrollUpdate();
+        }, 1500);
+
+        // Deep linking update (D2)
+        history.replaceState(null, '', '#' + targetId);
+        window.scrollTo({ top: targetScrollY, behavior: getScrollBehavior() });
+        scheduleScrollUpdate();
+      });
+    });
+
+    // Nav-pin expiry: scrollend with wheel/touchmove/navigation keys (C5)
+    window.addEventListener('scrollend', () => {
+      clearNavPin();
+      scheduleScrollUpdate();
+    });
+    window.addEventListener('wheel', clearNavPin, { passive: true });
+    window.addEventListener('touchmove', clearNavPin, { passive: true });
+    window.addEventListener('keydown', (e) => {
+      const navKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '];
+      if (navKeys.includes(e.key)) {
+        clearNavPin();
+      }
+    }, { passive: true });
+
+    // 7. Event Delegation for Cards (A1, D5)
+    function markCardVisited(card) {
+      if (!card) return;
+      const key = card.dataset.key;
+      if (!visitedHrefs.has(key)) {
+        visitedHrefs.add(key);
+        saveStoredSet('toxico_visited', visitedHrefs);
+      }
+      if (!card.classList.contains('visited')) {
+        card.classList.add('visited');
+        const contentSpan = card.querySelector('.card-content');
+        if (contentSpan && !contentSpan.querySelector('.tag-visited')) {
+          const tag = document.createElement('span');
+          tag.className = 'tag-visited';
+          tag.textContent = 'Visited';
+          contentSpan.appendChild(tag);
+        }
+      }
+    }
+
+    sectionsRoot.addEventListener('click', (e) => {
+      const favBtn = e.target.closest('.fav-btn');
+      if (favBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const card = favBtn.closest('.link-card');
+        if (!card) return;
+        const key = card.dataset.key;
+        const isFav = !favoriteHrefs.has(key);
+        if (isFav) {
+          favoriteHrefs.add(key);
+        } else {
+          favoriteHrefs.delete(key);
+        }
+        saveStoredSet('toxico_favorites', favoriteHrefs);
+        favBtn.classList.toggle('is-favorite', isFav);
+        const label = isFav ? 'Remove from favorites' : 'Add to favorites';
+        favBtn.setAttribute('aria-label', label);
+        favBtn.setAttribute('aria-pressed', isFav ? 'true' : 'false');
+        favBtn.title = label;
+        if (onlyFavorites) applyFilters();
+        return;
+      }
+
+      const cardLink = e.target.closest('.card-link');
+      if (cardLink) {
+        markCardVisited(cardLink.closest('.link-card'));
+      }
+    });
+
+    sectionsRoot.addEventListener('auxclick', (e) => {
+      if (e.button !== 1 || e.target.closest('.fav-btn')) return;
+      const cardLink = e.target.closest('.card-link');
+      if (cardLink) {
+        markCardVisited(cardLink.closest('.link-card'));
+      }
+    });
+
+    // Inline Two-Step Reset History (No blocking window.confirm)
+    let resetConfirmTimer = null;
+    const DEFAULT_RESET_LABEL = 'Reset visited links history';
+    const CONFIRM_RESET_LABEL = 'Press again to confirm reset';
+
+    resetHistoryBtn.addEventListener('click', () => {
+      if (!resetHistoryBtn.classList.contains('is-confirming')) {
+        resetHistoryBtn.classList.add('is-confirming');
+        resetHistoryBtn.setAttribute('aria-label', CONFIRM_RESET_LABEL);
+        resetHistoryBtn.title = CONFIRM_RESET_LABEL;
+        if (resetHistoryLabel) resetHistoryLabel.style.display = 'inline';
+        if (resetConfirmTimer) clearTimeout(resetConfirmTimer);
+        resetConfirmTimer = setTimeout(() => {
+          resetHistoryBtn.classList.remove('is-confirming');
+          resetHistoryBtn.setAttribute('aria-label', DEFAULT_RESET_LABEL);
+          resetHistoryBtn.title = DEFAULT_RESET_LABEL;
+          if (resetHistoryLabel) resetHistoryLabel.style.display = 'none';
+        }, 3000);
+        return;
+      }
+
+      if (resetConfirmTimer) clearTimeout(resetConfirmTimer);
+      resetHistoryBtn.classList.remove('is-confirming');
+      resetHistoryBtn.setAttribute('aria-label', DEFAULT_RESET_LABEL);
+      resetHistoryBtn.title = DEFAULT_RESET_LABEL;
+      if (resetHistoryLabel) resetHistoryLabel.style.display = 'none';
+
+      try {
+        localStorage.removeItem('toxico_visited');
+      } catch (_) {}
+      visitedHrefs.clear();
+      linkCards.forEach(card => {
+        card.classList.remove('visited');
+        const tag = card.querySelector('.tag-visited');
+        if (tag) tag.remove();
+      });
+    });
+
+    // 8. Unified Filtering & Search (D1)
+    function normalizeSearchText(str) {
+      return (str || '')
+        .normalize('NFC')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function applyFilters() {
+      const rawQuery = searchInput.value;
+      const normalizedQuery = normalizeSearchText(rawQuery);
+      const queryTokens = normalizedQuery ? normalizedQuery.split(' ').filter(Boolean) : [];
+      const isFiltering = Boolean(queryTokens.length > 0 || onlyFavorites);
+      let anySectionVisible = false;
+
+      sectionRecords.forEach(record => {
+        setSectionCollapsed(record, isFiltering ? false : collapsedSectionIds.has(record.id));
+        let visibleCardsCount = 0;
+        const sectionTitleText = normalizeSearchText(record.title ? record.title.textContent : '');
+
+        record.groups.forEach(({ grid, heading, cards }) => {
+          const groupTitleText = normalizeSearchText(heading ? heading.textContent : '');
+          let hasVisibleCard = false;
+
+          cards.forEach(card => {
+            const favMatch = !onlyFavorites || favoriteHrefs.has(card.dataset.key);
+            let textMatch = true;
+
+            if (queryTokens.length > 0) {
+              const cardTitleText = normalizeSearchText(card.dataset.search || '');
+              const searchableCombined = `${cardTitleText} ${groupTitleText} ${sectionTitleText}`;
+              textMatch = queryTokens.every(token => searchableCombined.includes(token));
+            }
+
+            const match = favMatch && textMatch;
+            card.style.display = match ? '' : 'none';
+            if (match) {
+              hasVisibleCard = true;
+              visibleCardsCount++;
+            }
+          });
+
+          if (heading) heading.style.display = hasVisibleCard ? '' : 'none';
+          grid.style.display = hasVisibleCard ? '' : 'none';
+        });
+
+        const hasVisibleGrid = visibleCardsCount > 0;
+        record.el.style.display = hasVisibleGrid ? '' : 'none';
+
+        if (record.meta && record.meta.dataset.unit) {
+          const total = record.allCards.length;
+          record.meta.textContent = isFiltering
+            ? `${visibleCardsCount} / ${total} ${record.meta.dataset.unit}`
+            : `${total} ${record.meta.dataset.unit}`;
+        }
+
+        if (hasVisibleGrid) anySectionVisible = true;
+      });
+
+      if (!anySectionVisible) {
+        if (onlyFavorites && !queryTokens.length) {
+          emptyStateText.textContent = 'No favorite resources yet. Click the star icon on any card to bookmark it.';
+          clearSearchBtn.textContent = 'Show all resources';
+        } else {
+          emptyStateText.textContent = 'No resources match your current filter.';
+          clearSearchBtn.textContent = 'Clear filter';
+        }
+      }
+      emptyState.style.display = anySectionVisible ? 'none' : 'block';
+      updateBottomRunway();
+      scheduleScrollUpdate();
+    }
+
+    favoritesFilterBtn.addEventListener('click', () => {
+      onlyFavorites = !onlyFavorites;
+      favoritesFilterBtn.classList.toggle('is-active', onlyFavorites);
+      favoritesFilterBtn.setAttribute('aria-pressed', onlyFavorites ? 'true' : 'false');
+      applyFilters();
+    });
+
+    searchInput.addEventListener('input', applyFilters);
+
+    clearSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      if (onlyFavorites) {
+        onlyFavorites = false;
+        favoritesFilterBtn.classList.remove('is-active');
+        favoritesFilterBtn.setAttribute('aria-pressed', 'false');
+      }
+      applyFilters();
+      searchInput.focus();
     });
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && document.activeElement !== searchInput) {
+      const tag = document.activeElement ? document.activeElement.tagName : '';
+      const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable);
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && !isEditable) {
         e.preventDefault();
         searchInput.focus();
       } else if (e.key === 'Escape' && document.activeElement === searchInput) {
@@ -1223,174 +1980,191 @@
       }
     });
 
-    function applyFilters() {
-      const query = searchInput.value.toLowerCase().trim();
-      let anySectionVisible = false;
+    // 9. Structured Scroll Progress & Pipeline (C2: Read Phase then Write Phase)
+    let rafPending = false;
 
-      linkGrids.forEach(grid => {
-        const heading = grid.previousElementSibling;
-        const headingMatch = heading && heading.tagName === 'H3' && heading.textContent.toLowerCase().includes(query);
-        let hasVisibleCard = false;
-
-        grid.querySelectorAll('.link-card').forEach(card => {
-          const cardMatch = (card.dataset.searchText || card.textContent.toLowerCase()).includes(query);
-          const match = !query || headingMatch || cardMatch;
-          card.style.display = match ? '' : 'none';
-          if (match) hasVisibleCard = true;
-        });
-
-        if (heading && heading.tagName === 'H3') {
-          heading.style.display = hasVisibleCard ? '' : 'none';
-        }
-        grid.style.display = hasVisibleCard ? '' : 'none';
-      });
-
-      sections.forEach(section => {
-        const allCardsInSection = section.querySelectorAll('.link-card');
-        const visibleCardsCount = Array.from(allCardsInSection).filter(c => c.style.display !== 'none').length;
-        const hasVisibleGrid = visibleCardsCount > 0;
-        section.style.display = hasVisibleGrid ? '' : 'none';
-
-        const metaEl = section.querySelector('.section-meta');
-        if (metaEl && metaEl.dataset.unit) {
-          metaEl.textContent = query
-            ? `${visibleCardsCount} / ${allCardsInSection.length} ${metaEl.dataset.unit}`
-            : `${allCardsInSection.length} ${metaEl.dataset.unit}`;
-        }
-
-        if (hasVisibleGrid) anySectionVisible = true;
-      });
-
-      emptyState.style.display = anySectionVisible ? 'none' : 'block';
-      updateScrollProgress();
-    }
-
-    searchInput.addEventListener('input', applyFilters);
-    clearSearchBtn.addEventListener('click', () => {
-      searchInput.value = '';
-      applyFilters();
-      searchInput.focus();
-    });
-
-    // Live Continuous Vertical Line Progress & Section Header Text Color Sync
     function updateScrollProgress() {
-      const scrollTop = window.scrollY;
-      const docHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const scrollRatio = Math.min(1, Math.max(0, scrollTop / docHeight));
+      rafPending = false;
+      if (!spineTrack || !spineFill) return;
 
-      const shellRect = pageShell.getBoundingClientRect();
-      const shellTop = scrollTop + shellRect.top;
-      const shellHeight = Math.max(1, pageShell.offsetHeight);
+      // ==========================================
+      // READ PHASE (Batch all DOM queries & measurements)
+      // ==========================================
+      const scrollY = window.scrollY;
+      const innerHeight = window.innerHeight;
+      const scrollHeight = document.documentElement.scrollHeight;
 
-      // Position the tip of the vertical progress line at a natural reading horizon in the viewport
-      const viewportHorizon = 150 + scrollRatio * (window.innerHeight - 170);
-      const lineTipInShell = Math.min(shellHeight, Math.max(28, (scrollTop + viewportHorizon) - shellTop));
-      const pct = Math.min(100, Math.max(0, (lineTipInShell / shellHeight) * 100));
-
-      if (spineFill) {
-        spineFill.style.height = `${pct}%`;
+      if (navPinnedSectionId && navTargetScrollY !== null) {
+        if (Math.abs(scrollY - navTargetScrollY) <= 2) {
+          clearNavPin();
+        }
       }
 
-      const visibleSections = Array.from(sections).filter(sec => sec.style.display !== 'none');
-      let activeSectionId = visibleSections.length > 0 ? visibleSections[0].id : '';
+      const targetOffset = getTopBarOffset();
+      const headerThresholdY = targetOffset + 4;
+      const trackRect = spineTrack.getBoundingClientRect();
+      const trackHeight = Math.max(1, spineTrack.offsetHeight);
+      const visibleRecords = sectionRecords.filter(r => r.el.style.display !== 'none');
 
-      sections.forEach(sec => {
-        if (sec.style.display === 'none') {
-          sec.classList.remove('is-reached', 'is-active');
-          return;
+      let thresholdRecord = visibleRecords.length > 0 ? visibleRecords[0] : null;
+      const recordMetrics = visibleRecords.map(record => {
+        const headerEl = record.header || record.el;
+        const hRect = headerEl.getBoundingClientRect();
+        if (hRect.top <= headerThresholdY) {
+          thresholdRecord = record;
         }
-        const reached = lineTipInShell >= (sec.offsetTop + 8);
-        sec.classList.toggle('is-reached', reached);
-        if (reached) {
-          activeSectionId = sec.id;
-        }
+        const kRect = record.kicker ? record.kicker.getBoundingClientRect() : null;
+        const tRect = record.title ? record.title.getBoundingClientRect() : null;
+        return { record, hRect, kRect, tRect };
       });
 
-      sections.forEach(sec => {
-        sec.classList.toggle('is-active', sec.id === activeSectionId);
+      const activeRecord = (navPinnedSectionId && visibleRecords.find(r => r.id === navPinnedSectionId)) || thresholdRecord;
+      const activeSectionId = activeRecord ? activeRecord.id : '';
+
+      const activeMetric = recordMetrics.find(m => m.record === activeRecord) || recordMetrics[0];
+      const refHeaderHeight = activeMetric && activeMetric.hRect ? activeMetric.hRect.height : 68;
+      const anchorViewportY = targetOffset + refHeaderHeight;
+
+      const firstHeaderBottom = recordMetrics.length > 0 && recordMetrics[0].hRect
+        ? recordMetrics[0].hRect.bottom
+        : anchorViewportY;
+
+      let lineTipViewportY = Math.max(anchorViewportY, firstHeaderBottom);
+
+      const maxScroll = Math.max(0, scrollHeight - innerHeight);
+      if (!navPinnedSectionId && maxScroll > tailStartScrollY && scrollY > tailStartScrollY) {
+        const tailRatio = Math.min(1, Math.max(0, (scrollY - tailStartScrollY) / Math.max(1, maxScroll - tailStartScrollY)));
+        lineTipViewportY = lineTipViewportY + tailRatio * Math.max(0, innerHeight - lineTipViewportY);
+      }
+
+      if (navPinnedSectionId && activeMetric && activeMetric.hRect) {
+        lineTipViewportY = Math.max(lineTipViewportY, activeMetric.hRect.bottom);
+      }
+
+      const finaleSvgVisible = Boolean(spineFinale && finaleSvg && spineFinale.style.display !== 'none');
+      const finaleSvgRect = finaleSvgVisible ? finaleSvg.getBoundingClientRect() : null;
+
+      const headingMetrics = allHeadings
+        .filter(h3 => h3.style.display !== 'none' && h3.offsetParent !== null)
+        .map(h3 => ({ h3, rect: h3.getBoundingClientRect() }));
+
+      // ==========================================
+      // COMPUTATION
+      // ==========================================
+      const lineTipY = Math.min(trackHeight, Math.max(0, lineTipViewportY - trackRect.top));
+
+      let tipSvgY = 0;
+      let dashOffset = 1000;
+      if (finaleSvgRect) {
+        const svgHeight = Math.max(1, finaleSvgRect.height);
+        tipSvgY = ((lineTipViewportY - finaleSvgRect.top) / svgHeight) * SVG_VIEWBOX_HEIGHT;
+        const branchProgress = Math.min(1, Math.max(0, (tipSvgY - 150) / 46));
+        dashOffset = Math.round((1 - branchProgress) * 1000);
+      }
+
+      // ==========================================
+      // WRITE PHASE (Batch all DOM mutations with zero intervening reads)
+      // ==========================================
+      spineFill.style.height = `${lineTipY}px`;
+
+      if (finaleSvgVisible) {
+        spineFinale.classList.toggle('is-node-reached', tipSvgY >= 44);
+        spineFinale.classList.toggle('is-cat-reached',  tipSvgY >= 150);
+        spineFinale.classList.toggle('is-end-reached',  tipSvgY >= 196);
+
+        if (finaleBranchRight) finaleBranchRight.style.strokeDashoffset = `${dashOffset}`;
+      }
+
+      recordMetrics.forEach(({ record, hRect, kRect, tRect }) => {
+        if (record.kicker && kRect) {
+          record.kicker.classList.toggle('is-reached', lineTipViewportY >= kRect.top + kRect.height * 0.55);
+        }
+
+        const titleReached = tRect ? (lineTipViewportY >= tRect.top + tRect.height * 0.55) : false;
+        record.el.classList.toggle('is-reached', titleReached);
+        record.el.classList.toggle('is-border-reached', lineTipViewportY >= hRect.bottom - 1);
+        record.el.classList.toggle('is-active', record.id === activeSectionId);
+      });
+
+      // Clear states on non-visible sections
+      sectionRecords.forEach(record => {
+        if (record.el.style.display === 'none') {
+          record.el.classList.remove('is-reached', 'is-active', 'is-border-reached');
+          if (record.kicker) record.kicker.classList.remove('is-reached');
+        }
       });
 
       navLinks.forEach(link => {
         link.classList.toggle('is-active', link.getAttribute('data-target') === activeSectionId);
       });
 
-      // Highlight sub-topics reached by the vertical progress line
-      let lastReachedHeading = null;
-      let firstVisibleHeading = null;
-
-      allHeadings.forEach(h3 => {
-        h3.classList.remove('in-view', 'is-reached');
-        if (h3.style.display === 'none') return;
-        if (!firstVisibleHeading) firstVisibleHeading = h3;
-
-        const h3Rect = h3.getBoundingClientRect();
-        const h3TopInShell = (scrollTop + h3Rect.top) - shellTop;
-        if (lineTipInShell >= (h3TopInShell + 4)) {
-          h3.classList.add('is-reached');
-          lastReachedHeading = h3;
-        }
+      headingMetrics.forEach(({ h3, rect }) => {
+        h3.classList.toggle('is-reached', lineTipViewportY >= rect.top + rect.height * 0.55);
       });
+    }
 
-      const activeHeading = lastReachedHeading || firstVisibleHeading;
-      if (activeHeading) {
-        activeHeading.classList.add('in-view', 'is-reached');
+    function scheduleScrollUpdate() {
+      if (!rafPending) {
+        rafPending = true;
+        window.requestAnimationFrame(updateScrollProgress);
       }
     }
 
-    window.addEventListener('scroll', updateScrollProgress, { passive: true });
-    window.addEventListener('resize', updateScrollProgress, { passive: true });
-    updateScrollProgress();
+    window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+    window.addEventListener('resize', () => {
+      updateBottomRunway();
+      scheduleScrollUpdate();
+    }, { passive: true });
 
-    // Visited links persistence with safe JSON parsing
-    let visitedUrls = [];
-    try {
-      const parsed = JSON.parse(localStorage.getItem('toxico_visited') || '[]');
-      if (Array.isArray(parsed)) visitedUrls = parsed;
-    } catch (_) {
-      visitedUrls = [];
+    // 10. Performance Observers (C3, C4)
+    // IntersectionObserver to pause cat panorama when offscreen (C3)
+    if ('IntersectionObserver' in window && spineFinale) {
+      const finaleObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          spineFinale.classList.toggle('is-paused', !entry.isIntersecting);
+        });
+      }, { rootMargin: '100px' });
+      finaleObserver.observe(spineFinale);
     }
 
-    const resetHistoryBtn = document.getElementById('reset-history-btn');
-
-    function markCardVisited(card) {
-      if (!card.classList.contains('visited')) {
-        card.classList.add('visited');
-        const contentSpan = card.querySelector('.card-content') || card;
-        if (!contentSpan.querySelector('.tag-visited')) {
-          const tag = document.createElement('span');
-          tag.className = 'tag-visited';
-          tag.textContent = 'Visited';
-          contentSpan.appendChild(tag);
-        }
-      }
+    // ResizeObserver on sections root + font readiness (C4)
+    if ('ResizeObserver' in window && sectionsRoot) {
+      const sectionsObserver = new ResizeObserver(() => {
+        updateBottomRunway();
+        scheduleScrollUpdate();
+      });
+      sectionsObserver.observe(sectionsRoot);
     }
 
-    linkCards.forEach(card => {
-      if (visitedUrls.includes(card.href)) {
-        markCardVisited(card);
-      }
-      card.addEventListener('click', () => {
-        if (!visitedUrls.includes(card.href)) {
-          visitedUrls.push(card.href);
-          try {
-            localStorage.setItem('toxico_visited', JSON.stringify(visitedUrls));
-          } catch (_) {}
-        }
-        markCardVisited(card);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        updateBottomRunway();
+        scheduleScrollUpdate();
       });
-    });
+    }
 
-    resetHistoryBtn.addEventListener('click', () => {
-      try {
-        localStorage.removeItem('toxico_visited');
-      } catch (_) {}
-      visitedUrls = [];
-      linkCards.forEach(card => {
-        card.classList.remove('visited');
-        const tag = card.querySelector('.tag-visited');
-        if (tag) tag.remove();
-      });
-    });
+    // 11. Initial View & Deep Link Resolution (D2)
+    applyFilters();
+
+    if (location.hash) {
+      const hashId = location.hash.replace(/^#/, '');
+      const targetRecord = sectionRecords.find(r => r.id === hashId);
+      if (targetRecord) {
+        if (targetRecord.el.classList.contains('is-collapsed')) {
+          setSectionCollapsed(targetRecord, false);
+          collapsedSectionIds.delete(targetRecord.id);
+          saveStoredSet('toxico_collapsed', collapsedSectionIds);
+        }
+        updateBottomRunway();
+        requestAnimationFrame(() => {
+          const targetOffset = getTopBarOffset();
+          const headerEl = targetRecord.header || targetRecord.el;
+          const targetScrollY = Math.max(0, Math.round(window.scrollY + headerEl.getBoundingClientRect().top - targetOffset));
+          window.scrollTo({ top: targetScrollY, behavior: 'instant' });
+          scheduleScrollUpdate();
+        });
+      }
+    }
   </script>
 </body>
 </html>
