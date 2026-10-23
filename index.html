@@ -1773,6 +1773,9 @@
     window.addEventListener('wheel', clearNavPin, { passive: true });
     window.addEventListener('touchmove', clearNavPin, { passive: true });
     window.addEventListener('keydown', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) {
+        return;
+      }
       const navKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '];
       if (navKeys.includes(e.key)) {
         clearNavPin();
@@ -2193,11 +2196,15 @@
       });
     }
 
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
     if (location.hash) {
       navigateToHash(true);
     }
 
-    window.addEventListener('hashchange', () => navigateToHash(false));
+    window.addEventListener('hashchange', () => navigateToHash(true));
   </script>
 </body>
 </html>
