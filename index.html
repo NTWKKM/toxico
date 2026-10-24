@@ -1224,7 +1224,7 @@
         <div class="kpi-cell">
           <span class="kpi-label">Total catalog</span>
           <div class="kpi-value-row">
-            <span class="kpi-value" id="kpi-total">64</span>
+            <span class="kpi-value" id="kpi-total">72</span>
             <span class="kpi-unit" id="kpi-total-sub">57 lectures · 5 docs · 10 papers</span>
           </div>
         </div>
@@ -1802,8 +1802,16 @@
       const visitedCount = linkCards.filter(c => visitedHrefs.has(c.dataset.key)).length;
       const favCount = linkCards.filter(c => favoriteHrefs.has(c.dataset.key)).length;
       const pct = totalCount > 0 ? Math.round((visitedCount / totalCount) * 100) : 0;
+      const countSectionItems = (secId) => {
+        const sec = SECTIONS_DATA.find(s => s.id === secId);
+        return sec ? sec.groups.reduce((sum, g) => sum + g.items.length, 0) : 0;
+      };
+      const lectureCount = countSectionItems('section-video');
+      const docCount = countSectionItems('section-file');
+      const paperCount = countSectionItems('section-link');
 
       if (kpiTotalEl) kpiTotalEl.textContent = String(totalCount);
+      if (kpiTotalSubEl) kpiTotalSubEl.textContent = `${lectureCount} lectures · ${docCount} docs · ${paperCount} papers`;
       if (kpiVisitedEl) kpiVisitedEl.textContent = String(visitedCount);
       if (kpiVisitedSubEl) kpiVisitedSubEl.textContent = `${pct}% of ${totalCount} reviewed`;
       if (kpiFavoritesEl) kpiFavoritesEl.textContent = String(favCount);
@@ -1811,6 +1819,8 @@
         kpiFavoritesSubEl.textContent = favCount === 1 ? '1 starred item' : `${favCount} starred items`;
       }
     }
+
+    updateWorkbenchMetrics();
 
     function syncFinaleSpineAlignment() {
       if (!spineTrack || !spineFinale || !finaleSvg || spineFinale.style.display === 'none') return;
@@ -2168,6 +2178,9 @@
 
         const hasVisibleGrid = visibleCardsCount > 0;
         record.el.style.display = hasVisibleGrid ? '' : 'none';
+        if (!hasVisibleGrid && navPinnedSectionId === record.id) {
+          clearNavPin();
+        }
 
         if (record.meta && record.meta.dataset.unit) {
           const total = record.allCards.length;
