@@ -70,22 +70,14 @@ while IFS= read -r href; do
       fi
     fi
   else
-    # Local relative link (URL-decoded)
-    # Decode %20 if present
-    LOCAL_PATH="$BASE_DIR/$href"
-    if [[ -f "$LOCAL_PATH" ]]; then
-      echo "[PASS] [FILE EXISTS] $href"
+    # Local relative link (decode %20 in pure bash)
+    DECODED="${href//%20/ }"
+    if [[ -f "$BASE_DIR/$DECODED" ]]; then
+      echo "[PASS] [FILE EXISTS] $DECODED"
       ((PASS_COUNT++)) || true
     else
-      # Try url-decoded path
-      DECODED=$(python3 -c "import urllib.parse, sys; print(urllib.parse.unquote(sys.argv[1]))" "$href" 2>/dev/null || echo "$href")
-      if [[ -f "$BASE_DIR/$DECODED" ]]; then
-        echo "[PASS] [FILE EXISTS] $DECODED"
-        ((PASS_COUNT++)) || true
-      else
-        echo "[FAIL] [FILE NOT FOUND] $href"
-        ((FAIL_COUNT++)) || true
-      fi
+      echo "[FAIL] [FILE NOT FOUND] $href"
+      ((FAIL_COUNT++)) || true
     fi
   fi
 done < <(grep -oE "href: '[^']+'" "$INDEX_FILE" | sed -E "s/href: '([^']+)'/\1/")

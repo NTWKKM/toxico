@@ -13,6 +13,6 @@
 ## 2. Component Contrast Architecture (Header, Workbench Strip, Spine, Cards)
 
 - **Top Bar (`.top-bar` & `.top-nav`)**: Solid opaque sticky bar (`--bg-elevated`) with a whisper `1px` bottom border (`--line`) and recessed segmented navigation rail (`--bg-subtle`). Active tabs invert cleanly (`background: var(--ink-primary); color: var(--bg-elevated)`).
-- **Workbench Status Rail & Divided KPI Strip (`.workbench-header` & `.workbench-strip`)**: 4-option status filter rail (`All` / `Unread` / `Reviewed` / `Saved`) paired with a single 4-column divided KPI strip separated by `1px` internal hairlines.
-- **Unobstructed Left Spine Lane (`.spine-track`, `.spine-node`, `#spine-finale`)**: Dedicated left gutter (`padding-left: 1.5rem`) so the `2px` progress line and `12px` section milestone nodes never intersect card borders or text.
-- **Cards (`a.link-card`)**: Flat 2-line cards with whisper `1px` borders (`--line`), title + clinical source/format subline (`.link-subline`), and recessed reviewed state (`--bg-visited`) preserving WCAG AA contrast.
+- **Workbench Status Rail & Inline Summary (`.workbench-header` & `.workbench-title-row`)**: Visible `<h1 class="workbench-title">Toxico Index</h1>` (`20px` desktop / `18px` mobile) paired with a single-line `tabular-nums` summary (`#workbench-summary`: `49 resources · 0 reviewed (0%) · 0 saved`) on the left and the 4-option status filter rail (`All` / `Unread` / `Reviewed` / `Saved`) on the right.
+- **Unobstructed Left Spine Lane (`.spine-track`, `.spine-node`, `#spine-finale`)**: Dedicated left gutter (`padding-left: 1.5rem`) so the `2px` progress line and `10px` section milestone nodes never intersect card borders or text.
+- **Cards (`.link-card`)**: Flat single-focus cards with whisper `1px` borders (`--line`), clean resource title without redundant source sublines, and recessed reviewed state (`--bg-visited`) preserving WCAG AA contrast.
