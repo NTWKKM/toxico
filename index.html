@@ -1213,10 +1213,10 @@
         <span class="workbench-node" aria-hidden="true"></span>
 
         <div class="status-filter-rail" role="group" aria-label="Filter by study status">
-          <button type="button" class="filter-chip is-active" data-status-filter="all">All</button>
-          <button type="button" class="filter-chip" data-status-filter="unread">Unread</button>
-          <button type="button" class="filter-chip" data-status-filter="visited">Reviewed</button>
-          <button type="button" class="filter-chip" data-status-filter="favorites">Saved</button>
+          <button type="button" class="filter-chip is-active" data-status-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="filter-chip" data-status-filter="unread" aria-pressed="false">Unread</button>
+          <button type="button" class="filter-chip" data-status-filter="visited" aria-pressed="false">Reviewed</button>
+          <button type="button" class="filter-chip" data-status-filter="favorites" aria-pressed="false">Saved</button>
         </div>
       </div>
 
@@ -2105,6 +2105,7 @@
         const mode = btn.getAttribute('data-status-filter');
         const active = (onlyFavorites && mode === 'favorites') || (!onlyFavorites && mode === statusFilter);
         btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
     }
 
@@ -2130,7 +2131,7 @@
         const sectionTitleText = normalizeSearchText(record.title ? record.title.textContent : '');
 
         record.groups.forEach(({ grid, heading, countEl, cards }) => {
-          const groupTitleText = normalizeSearchText(heading ? heading.textContent : '');
+          const groupTitleText = normalizeSearchText(heading ? (heading.dataset.search || '') : '');
           let groupVisibleCount = 0;
 
           cards.forEach(card => {
