@@ -1,10 +1,11 @@
 # ARCHITECTURE.md — Toxico Index
 
 ## 1. Components
-- **Header & Search Bar (`.top-bar`)**: Sticky header with course brand wordmark, segmented navigation rail (`.top-nav`), and action controls (`.top-actions`): live search input (`/` shortcut), icon-only Favorites filter toggle (`#favorites-filter-btn`), Reset History button (`#reset-history-btn` with inline two-step confirmation, dynamic `aria-label`, 3s auto-timeout, and WCAG AA dark mode contrast), and Dark/Light theme toggle (`#theme-toggle`).
-- **Continuous Vertical Progress Spine (`.spine-track` & `.spine-fill`)**: Unbroken vertical line running behind the sections and cards, dynamically filling as the user scrolls and highlighting reached/active section headers and sub-topic headings.
+- **Header & Search Bar (`.top-bar`)**: Sticky solid header (`--bg-elevated`) with course brand wordmark, segmented navigation rail (`.top-nav`), and action controls (`.top-actions`): live search input (`/` shortcut via semantic `<kbd class="search-kbd">`), icon-only Favorites filter toggle (`#favorites-filter-btn`), Reset History button (`#reset-history-btn` with inline two-step confirmation, dynamic `aria-label`, and 3s auto-timeout), and Dark/Light theme toggle (`#theme-toggle`).
+- **Workbench Status Rail & Divided KPI Strip (`.workbench-header` & `.workbench-strip`)**: Screen-reader-accessible `<h1 class="sr-only">Toxico Index</h1>`, status filter rail (`.status-filter-rail`: `All`, `Unread`, `Reviewed`, `Saved`), and a single 4-column divided KPI strip (`1px` internal hairlines) displaying live `tabular-nums` metrics for Total Catalog, Clinical Guidelines, Reviewed Progress, and Saved Bookmarks.
+- **Unobstructed Vertical Progress Spine (`.spine-track`, `.spine-fill`, `.spine-node`)**: Dedicated left gutter lane (`padding-left: 1.5rem` on `.page-shell`) with an origin pin at the workbench header, `12px` circular section milestone nodes (`.spine-node`) aligned to each section header, and the scroll-reactive `#spine-finale` cat & Erlenmeyer flask scene managed by `updateBottomRunway()` and `syncFinaleSpineAlignment()` (anchoring `.spine-track`'s bottom edge to the finale SVG junction node at `y=150` when sections are visible, without artificial bottom spacer padding).
 - **Data-Driven Sections & Grid (`#sections-root`)**: Rendered from a single `SECTIONS_DATA` catalog into categorized sections (Video Lectures, Clinical Guidelines, Articles & Papers) with automatic item counting (`visible / total`) and shared `<svg><symbol>` icon definitions.
-- **Resource Link Cards (`a.link-card`)**: Minimalist elevated cards with precomputed `data-key` attributes, shared SVG `<use>` icons, accessible touch-sized favorite star buttons (`.fav-btn`), and dynamic `Visited` / `New` metadata tags.
+- **Resource Link Cards (`a.link-card`)**: Flatwhisper-bordered cards (`--line`) with precomputed `data-key` attributes, shared SVG `<use>` icons, concise clinical source/format sublines (`.link-subline`), accessible touch-sized favorite star buttons (`.fav-btn`), and inline `Visited` / `New` status badges.
 
 ## 2. Data Flow
 - **Data-First Catalog (`SECTIONS_DATA`)**: Declarative JavaScript array defining sections, sub-topic groups, titles, URLs, icon references, and `isNew` flags.
@@ -14,9 +15,9 @@
   - `localStorage.toxico_visited`: Tracks clicked resource keys and renders `.visited` styling + `Visited` indicator.
   - `localStorage.toxico_collapsed`: Persists user-collapsed section IDs via `collapsedSectionIds` `Set` without being overwritten by temporary search/filter expansions.
   - `localStorage.toxico_theme`: Persists `light` or `dark` theme preference.
-- **Cached DOM Descriptors, Dynamic Bottom Runway & Scroll Progress (`requestAnimationFrame`)**:
+- **Cached DOM Descriptors, Finale Runway Alignment & Scroll Progress (`requestAnimationFrame`)**:
   - `sectionRecords` caches section, header, kicker, title, meta, group, and card DOM references once at startup, eliminating per-frame `querySelector` overhead.
-  - `updateBottomRunway()` dynamically calculates and applies bottom spacer padding on `.page-shell` (while keeping `.spine-track` bounded to `#sections-root`) so every section header—including lower or collapsed sections—can scroll to a consistent `20px` offset below `.top-bar`.
+  - `updateBottomRunway()` toggles `#spine-finale` visibility based on visible sections (setting `spineTrack.style.bottom = '24px'` when empty) and invokes `syncFinaleSpineAlignment()` to align the horizontal branch path and anchor `.spine-track`'s bottom offset directly to the `#spine-finale` SVG junction node (`y=150`) without artificial bottom spacer padding.
   - `scheduleScrollUpdate()` throttles scroll and resize calculations via `requestAnimationFrame`, aligning both `.is-active` section highlighting and `#spine-fill` height directly to the top-bar offset threshold (`topBarHeight + 20px`).
 
 ## 3. Repository Structure
